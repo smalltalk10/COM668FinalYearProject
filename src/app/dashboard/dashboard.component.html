@@ -1,0 +1,27 @@
+<div class="filter-bar">
+</div>
+
+<div class="container">
+    <ng-container *ngFor="let current_measurement of current_measurements | async">
+        <div class="main-content">
+            <div class="team-content">
+                <span>
+                    <strong>User ID:</strong> {{ current_measurement.Body.userID }}
+                </span>
+                <h1 style="margin-top: 10px;"><strong>Current Measurement</strong></h1>
+                <span>
+                    <strong>Last updated:</strong> {{ current_measurement.Body.datetime | date: 'medium' }}
+                </span>
+            </div>
+            <div>
+                <h1 style="margin-top: 10px;"><strong>Moisture: </strong>{{current_measurement.Body.moisture}}%</h1>
+                <h1 style="margin-top: 10px;"><strong>Temperature: </strong>{{current_measurement.Body.temperature}}°C</h1>
+                <h1 style="margin-top: 10px;"><strong>EC: </strong>{{current_measurement.Body.ec}}us/cm</h1>
+                <h1 style="margin-top: 10px;"><strong>pH: </strong>{{current_measurement.Body.ph}}PH</h1>
+                <h1 style="margin-top: 10px;"><strong>Nitrogen: </strong>{{current_measurement.Body.nitrogen}}mg/kg</h1>
+                <h1 style="margin-top: 10px;"><strong>Phosphorus: </strong>{{current_measurement.Body.phosphorus}}mg/kg</h1>
+                <h1 style="margin-top: 10px;"><strong>Potassium: </strong>{{current_measurement.Body.potassium}}mg/kg</h1>
+            </div>
+        </div>
+    </ng-container>
+</div>
