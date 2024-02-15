@@ -1,0 +1,35 @@
+<div class="modal-header">
+  <h4 class="modal-title">Register</h4>
+</div>
+
+<form [formGroup]="registerForm" (ngSubmit)="onSubmitUserRegister()">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="name">Create Username</label>
+      <input type="text" id="username" name="username" class="form-control" formControlName="username"
+        [ngClass]="{ error: registerIsInvalid('username') }" />
+    </div>
+    <div class="form-group">
+      <label for="email">Create E-mail Address</label>
+      <input type="email" id="email" name="email" class="form-control" formControlName="email"
+        [ngClass]="{ error: registerIsInvalid('email') }" (input)="updateEmailValidity()" />
+    </div>
+    <div class="form-group">
+      <label for="name">Input Your DeviceID</label>
+      <input type="text" id="deviceID" name="deviceID" class="form-control" formControlName="deviceID"
+        [ngClass]="{ error: registerIsInvalid('deviceID') }" />
+    </div>
+    <div class="form-group">
+      <label for="name">Create Password</label>
+      <input type="password" id="password" name="password" class="form-control" formControlName="password"
+        [ngClass]="{ error: registerIsInvalid('password') }" />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <span *ngIf="registerIsIncomplete() || errorMessage" [class.errorText]="errorMessage">{{ errorMessage || 'You must
+      complete all fields' }}</span>
+    <button *ngIf="!registerIsIncomplete()" mat-raised-button color="accent" type="submit" class="btn btn-primary">
+      Create Account
+    </button>
+  </div>
+</form>

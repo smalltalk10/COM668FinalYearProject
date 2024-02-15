@@ -20,6 +20,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 // My Componenets
 import { NavComponent } from './nav/nav.component';
 import { HomeComponent } from './home/home.component';
+import { AuthenticationModalComponent } from './nav/loginModal/authentication.modal.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 var routes: any = [
@@ -37,6 +38,7 @@ var routes: any = [
   declarations: [
     AppComponent,
     NavComponent,
+    AuthenticationModalComponent,
     DashboardComponent,
   ],
   imports: [

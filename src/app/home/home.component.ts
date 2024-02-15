@@ -7,6 +7,5 @@ import { WebService } from '../web.service';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent {
-  teams_list: any = [];
   constructor(public webService: WebService) {}
 }
