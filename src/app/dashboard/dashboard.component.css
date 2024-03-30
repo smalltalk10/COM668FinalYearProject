@@ -50,6 +50,8 @@
 .card {
   width: 100%;
   height: 100%;
+  background-color: rgba(31, 158, 35, 0.1);
+  border-color: rgba(31, 158, 35, 1);
 }
 
 .character-card {
@@ -66,4 +68,16 @@
   margin-left: auto;
   margin-right: auto;
   width: 50%;
+}
+
+.image {
+  height: 100px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Add this in your styles.css or dashboard.component.css */
+ngx-gauge .label {
+  font-size: 5px; /* or use a specific size like 12px */
 }

@@ -16,6 +16,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { NgxGaugeModule } from 'ngx-gauge';
+import { GoogleMapsModule } from '@angular/google-maps'
 
 // My Componenets
 import { NavComponent } from './nav/nav.component';
@@ -56,6 +58,8 @@ var routes: any = [
     MatBadgeModule,
     MatPaginatorModule,
     MatExpansionModule,
+    NgxGaugeModule,
+    GoogleMapsModule
   ],
   providers: [WebService],
   bootstrap: [AppComponent],
