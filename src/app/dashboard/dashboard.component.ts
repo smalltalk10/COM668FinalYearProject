@@ -1,17 +1,101 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { WebService } from '../web.service';
 import { Observable, interval } from 'rxjs';
 import { switchMap, startWith } from 'rxjs/operators';
+import { jwtDecode } from 'jwt-decode'; // Ensure correct import
 
 @Component({
   selector: 'dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   current_measurements!: Observable<any>;
+  decodedToken: any;
+  sessionStorage: Storage = window.sessionStorage;
+  zoom = 12;
+  mapCenter: google.maps.LatLngLiteral = { lat: 0, lng: 0 };
+  markerPosition: google.maps.LatLngLiteral = this.mapCenter;
+  currentPosition: any;
+  isLocationLoaded = false;
+  initialPosition: any;
 
   constructor(public webService: WebService) {}
+
+  ngOnInit() {
+    this.loadCurrentMeasurements();
+    this.decodeToken();
+    this.loadLocation();
+  }
+
+  loadCurrentMeasurements() {
+    this.current_measurements = interval(60000).pipe(
+      startWith(0),
+      switchMap(() => this.webService.getCurrentMeasurements())
+    );
+  }
+
+  decodeToken() {
+    try {
+      const token = this.sessionStorage.getItem('token');
+      if (token) {
+        this.decodedToken = jwtDecode(token);
+        this.updateCurrentPosition();
+      }
+    } catch (error) {
+      console.error('Error decoding token:', error);
+    }
+  }
+
+  loadLocation() {
+    this.webService.getLocation().subscribe({
+      next: (response: any) => this.handleLocationResponse(response),
+      error: (error) => console.error('Received invalid coordinates:', error),
+    });
+  }
+
+  handleLocationResponse(response: any) {
+    const latitude = parseFloat(response.lat);
+    const longitude = parseFloat(response.lng);
+    this.initialPosition = { lat: latitude, lng: longitude };
+    if (!isNaN(latitude) && !isNaN(longitude)) {
+      this.updateMapLocation(latitude, longitude);
+    }
+  }
+
+  updateMapLocation(lat: number, lng: number) {
+    this.mapCenter = { lat, lng };
+    this.markerPosition = this.mapCenter;
+    this.updateCurrentPosition();
+    this.isLocationLoaded = true;
+  }
+
+  updateCurrentPosition() {
+    if (this.decodedToken && this.markerPosition) {
+      this.currentPosition = `DeviceID: ${this.decodedToken.deviceID}, Lat: ${this.markerPosition.lat} Lng: ${this.markerPosition.lng}`;
+    }
+  }
+
+  onMapClick(event: google.maps.MapMouseEvent) {
+    if (event.latLng) {
+      this.updateMapLocation(event.latLng.lat(), event.latLng.lng());
+    }
+  }
+
+  positionsAreDifferent(): boolean {
+    if (!this.initialPosition) return false; // If initial position is not set, return false
+    return (
+      this.initialPosition.lat !== this.markerPosition.lat ||
+      this.initialPosition.lng !== this.markerPosition.lng
+    );
+  }
+
+  onSubmitUpdateLocation() {
+    this.webService.updateLocation(this.markerPosition).subscribe({
+      next: () => this.loadLocation(),
+      error: (error) => console.error('HTTP error:', error),
+    });
+  }
 
   temperatureThresholds = {
     '0': { color: 'red', bgOpacity: 0.2 },
@@ -131,16 +215,4 @@ export class DashboardComponent {
     '400': { color: '#555', size: 4, label: '400', font: '12px arial' },
     '500': { color: '#555', size: 4, label: '500+', font: '12px arial' },
   };
-
-  zoom = 12;
-  mapCenter: google.maps.LatLngLiteral = { lat: 54.5146, lng: -5.8896 };
-  // You can use the same object for both marker position and map center
-  markerPosition: google.maps.LatLngLiteral = this.mapCenter;
-
-  ngOnInit() {
-    this.current_measurements = interval(60000).pipe(
-      startWith(0),
-      switchMap(() => this.webService.getCurrentMeasurements())
-    );
-  }
 }

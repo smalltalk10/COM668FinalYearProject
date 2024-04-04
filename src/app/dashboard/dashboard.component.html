@@ -66,8 +66,8 @@
                     <div class="card" style="cursor: pointer">
                         <img src="./../assets/images/conditions/phosphorus.png" class="image">
                         <ngx-gauge class="center" [size]="200" type="arch" [thick]="15"
-                            [value]="current_measurement?.Body?.phosphorus" label="Phosphorus" append="mg/kg" [max]="30"
-                            [thresholds]="phosphorusThresholds" [markers]="phosphorusMarkers">
+                            [value]="current_measurement?.Body?.phosphorus" label="Phosphorus" append="mg/kg"
+                            [max]="300" [thresholds]="phosphorusThresholds" [markers]="phosphorusMarkers">
                         </ngx-gauge>
                     </div>
                 </div>
@@ -83,4 +83,14 @@
             </div>
         </div>
     </ng-container>
+    <div *ngIf="isLocationLoaded">
+        <google-map height="500px" width="100%" [center]="mapCenter" [zoom]="zoom" (mapClick)="onMapClick($event)">
+            <map-marker [position]="markerPosition" [title]="currentPosition">
+            </map-marker>
+        </google-map>
+    </div>
+    <button *ngIf="positionsAreDifferent()" mat-raised-button color="accent" style="margin-left: 190px;" type="submit"
+        (click)="onSubmitUpdateLocation()">
+        Save Changes
+    </button>
 </div>
