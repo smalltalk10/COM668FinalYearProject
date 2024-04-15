@@ -4,19 +4,15 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- main
+  - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '20.x'
-- task: NodeTool@0
-  inputs:
-    versionSource: 'spec'
-    versionSpec: '20.x'
+    versionSpec: '14.x'  # This is commonly supported for recent Angular versions; adjust as necessary
   displayName: 'Install Node.js'
 
 - script: |
@@ -24,3 +20,4 @@ steps:
     npm install
     ng build --prod
   displayName: 'npm install and build'
+
