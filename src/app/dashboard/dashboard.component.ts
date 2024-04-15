@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { WebService } from '../web.service';
 import { Observable, interval } from 'rxjs';
 import { switchMap, startWith } from 'rxjs/operators';
-import { jwtDecode } from 'jwt-decode'; // Ensure correct import
 
 @Component({
   selector: 'dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
+
 export class DashboardComponent implements OnInit {
   current_measurements!: Observable<any>;
   decodedToken: any;
@@ -24,8 +24,8 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.loadCurrentMeasurements();
-    this.decodeToken();
     this.loadLocation();
+    this.webService.fetchAllDateRangeMeasurements().subscribe();
   }
 
   loadCurrentMeasurements() {
@@ -33,18 +33,6 @@ export class DashboardComponent implements OnInit {
       startWith(0),
       switchMap(() => this.webService.getCurrentMeasurements())
     );
-  }
-
-  decodeToken() {
-    try {
-      const token = this.sessionStorage.getItem('token');
-      if (token) {
-        this.decodedToken = jwtDecode(token);
-        this.updateCurrentPosition();
-      }
-    } catch (error) {
-      console.error('Error decoding token:', error);
-    }
   }
 
   loadLocation() {
@@ -71,8 +59,8 @@ export class DashboardComponent implements OnInit {
   }
 
   updateCurrentPosition() {
-    if (this.decodedToken && this.markerPosition) {
-      this.currentPosition = `DeviceID: ${this.decodedToken.deviceID}, Lat: ${this.markerPosition.lat} Lng: ${this.markerPosition.lng}`;
+    if (this.markerPosition) {
+      this.currentPosition = `deviceID: ${ sessionStorage.getItem('deviceID')}, Lat: ${this.markerPosition.lat} Lng: ${this.markerPosition.lng}`;
     }
   }
 
@@ -83,7 +71,7 @@ export class DashboardComponent implements OnInit {
   }
 
   positionsAreDifferent(): boolean {
-    if (!this.initialPosition) return false; // If initial position is not set, return false
+    if (!this.initialPosition) return false;
     return (
       this.initialPosition.lat !== this.markerPosition.lat ||
       this.initialPosition.lng !== this.markerPosition.lng
@@ -97,6 +85,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  
   temperatureThresholds = {
     '0': { color: 'red', bgOpacity: 0.2 },
     '5': { color: 'orange', bgOpacity: 0.2 },

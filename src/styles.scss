@@ -1,0 +1,21 @@
+@import '@angular/material/theming';
+@import 'ag-grid-community/styles/ag-grid.css';
+@import 'ag-grid-community/styles/ag-theme-quartz.css';
+
+// Define your color palettes
+$primary: mat-palette($mat-green);
+$accent: mat-palette($mat-light-green, A200, A100, A400);
+$warn: mat-palette($mat-red);
+
+// Define a theme object
+$theme: mat-light-theme(
+  $primary,
+  $accent,
+  $warn
+);
+
+// Include base styles for common typographic elements
+@include mat-core();
+
+// Include all theme styles for the components
+@include angular-material-theme($theme);

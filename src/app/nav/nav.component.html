@@ -5,10 +5,10 @@
       <li class="nav-item">
         <a class="nav-link" routerLink="/dashboard">Dashboard</a>
       </li>
-      <!-- <li class="nav-item">
-      <a class="nav-link" routerLink="/data">Charts & Data</a>
+      <li class="nav-item">
+      <a class="nav-link" routerLink="/data">Historic Data</a>
     </li>
-    <li class="nav-item">
+    <!-- <li class="nav-item">
       <a class="nav-link" routerLink="/forecast">Forecast</a>
     </li> -->
     </ul>
@@ -17,9 +17,7 @@
   </ng-template>
   <div class="form-inline ms-auto">
     <ng-container *ngIf="sessionStorage.getItem('token'); else loggedOut">
-      <button mat-raised-button color="warn" style="margin-right: 10px;">
-        Log Out
-      </button>
+      
     </ng-container>
     <ng-template #loggedOut>
       <button mat-raised-button color="accent" style="margin-right: 10px;" (click)="onOpenAuthenticationModal()">

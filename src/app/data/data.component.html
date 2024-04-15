@@ -1,0 +1,92 @@
+<mat-tab-group style="margin-top: 55px;" (selectedIndexChange)="onTabChange($event)">
+    <mat-tab label="Day">
+        <div class="chart-container">
+            <!-- Top Row -->
+            <div class="chart-column">
+                <ag-charts-angular *ngIf="temperatureChartOptions" [options]="temperatureChartOptions"
+                    class="chart-item"></ag-charts-angular>
+                <ag-charts-angular *ngIf="moistureChartOptions" [options]="moistureChartOptions"
+                    class="chart-item"></ag-charts-angular>
+            </div>
+
+            <!-- Middle Row -->
+            <div class="chart-column">
+                <ag-charts-angular *ngIf="phChartOptions" [options]="phChartOptions"
+                    class="chart-item"></ag-charts-angular>
+                <ag-charts-angular *ngIf="salinityChartOptions" [options]="salinityChartOptions"
+                    class="chart-item"></ag-charts-angular>
+            </div>
+
+            <!-- Bottom Row -->
+            <div class="chart-column">
+                <ag-charts-angular *ngIf="npkChartOptions" [options]="npkChartOptions"
+                    class="chart-item"></ag-charts-angular>
+                <div class="chart-item">
+                    <ag-grid-angular class="ag-theme-quartz" style="width: 100%; height: 300px;" [rowData]="rowData"
+                        [columnDefs]="colDefs" [autoSizeStrategy]="autoSizeStrategy">
+                    </ag-grid-angular>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Week">
+        <div class="chart-container">
+            <!-- Top Row -->
+            <div class="chart-column">
+                <ag-charts-angular *ngIf="temperatureChartOptions" [options]="temperatureChartOptions"
+                    class="chart-item"></ag-charts-angular>
+                <ag-charts-angular *ngIf="moistureChartOptions" [options]="moistureChartOptions"
+                    class="chart-item"></ag-charts-angular>
+            </div>
+
+            <!-- Middle Row -->
+            <div class="chart-column">
+                <ag-charts-angular *ngIf="phChartOptions" [options]="phChartOptions"
+                    class="chart-item"></ag-charts-angular>
+                <ag-charts-angular *ngIf="salinityChartOptions" [options]="salinityChartOptions"
+                    class="chart-item"></ag-charts-angular>
+            </div>
+
+            <!-- Bottom Row -->
+            <div class="chart-column">
+                <ag-charts-angular *ngIf="npkChartOptions" [options]="npkChartOptions"
+                    class="chart-item"></ag-charts-angular>
+                <div class="chart-item">
+                    <ag-grid-angular class="ag-theme-quartz" style="width: 100%; height: 300px;" [rowData]="rowData"
+                        [columnDefs]="colDefs" [autoSizeStrategy]="autoSizeStrategy">
+                    </ag-grid-angular>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Month">
+        <div class="chart-container">
+            <!-- Top Row -->
+            <div class="chart-column">
+                <ag-charts-angular *ngIf="temperatureChartOptions" [options]="temperatureChartOptions"
+                    class="chart-item"></ag-charts-angular>
+                <ag-charts-angular *ngIf="moistureChartOptions" [options]="moistureChartOptions"
+                    class="chart-item"></ag-charts-angular>
+            </div>
+
+            <!-- Middle Row -->
+            <div class="chart-column">
+                <ag-charts-angular *ngIf="phChartOptions" [options]="phChartOptions"
+                    class="chart-item"></ag-charts-angular>
+                <ag-charts-angular *ngIf="salinityChartOptions" [options]="salinityChartOptions"
+                    class="chart-item"></ag-charts-angular>
+            </div>
+
+            <!-- Bottom Row -->
+            <div class="chart-column">
+                <ag-charts-angular *ngIf="npkChartOptions" [options]="npkChartOptions"
+                    class="chart-item"></ag-charts-angular>
+                <div class="chart-item">
+                    <ag-grid-angular class="ag-theme-quartz" style="width: 100%; height: 300px;" [rowData]="rowData"
+                        [columnDefs]="colDefs" [autoSizeStrategy]="autoSizeStrategy">
+                    </ag-grid-angular>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>

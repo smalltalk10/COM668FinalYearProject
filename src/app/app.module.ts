@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AgGridModule } from 'ag-grid-angular';
+import { AgChartsAngular } from 'ag-charts-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +25,7 @@ import { NavComponent } from './nav/nav.component';
 import { HomeComponent } from './home/home.component';
 import { AuthenticationModalComponent } from './nav/loginModal/authentication.modal.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { DataComponent } from './data/data.component'
 
 var routes: any = [
   {
@@ -34,14 +36,20 @@ var routes: any = [
     path: 'dashboard',
     component: DashboardComponent,
   },
+  {
+    path: 'data',
+    component: DataComponent,
+  },
 ];
 
 @NgModule({
   declarations: [
+    HomeComponent,
     AppComponent,
     NavComponent,
     AuthenticationModalComponent,
     DashboardComponent,
+    DataComponent
   ],
   imports: [
     BrowserModule,
@@ -50,6 +58,7 @@ var routes: any = [
     ReactiveFormsModule,
     NgbModule,
     AgGridModule,
+    AgChartsAngular,
     BrowserAnimationsModule,
     MatIconModule,
     MatButtonModule,

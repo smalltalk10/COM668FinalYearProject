@@ -54,15 +54,6 @@
   border-color: rgba(31, 158, 35, 1);
 }
 
-.character-card {
-  padding-left: 3px;
-  padding-right: 3px;
-}
-
-.character-name {
-  margin-bottom: 5px;
-}
-
 .center {
   display: block;
   margin-left: auto;
@@ -77,7 +68,6 @@
   margin-right: auto;
 }
 
-/* Add this in your styles.css or dashboard.component.css */
 ngx-gauge .label {
-  font-size: 5px; /* or use a specific size like 12px */
+  font-size: 5px;
 }

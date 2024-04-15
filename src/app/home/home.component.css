@@ -1,7 +1,50 @@
+.authenticationFrame {
+    background-color: #f4f4f4;   /* Light grey background */
+    border-radius: 8px;          /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Subtle shadow for depth */
+    padding: 15px;               /* Padding around the content */
+    margin: 20px auto;           /* Centering the frame, with margin from top and bottom */
+    width: 90%;                  /* Adjust width as needed, could use max-width for responsiveness */
+    max-width: 500px;            /* Maximum width of the frame */
+}
+
+.authenticationFrame .errorText {
+    color: #d9534f;              /* Color for error messages */
+    font-size: 0.9em;            /* Smaller text for error messages */
+    margin-top: -10px;           /* Position adjustment */
+    margin-bottom: 10px;         /* Space before next elements */
+    display: block;              /* Block display to take full width */
+}
+
 .center {
     text-align: center;
 }
 
 h1 {
-    font-size: 40px;
+    font-size: 36px;             /* Suitable font size for mobile and desktop */
+    color: #333;                 /* Dark color for better readability */
+    padding-bottom: 10px;        /* Space below the header */
+}
+
+.authenticationFrame .btn-primary {
+    width: 100%;                 /* Makes the button stretch to fill the container */
+    padding: 12px 0;             /* Adds vertical padding for better touch targets */
+    font-size: 1em;              /* Ensures readable font size */
+    text-transform: uppercase;   /* Optional: makes the button text uppercase */
+    letter-spacing: 1px;         /* Optional: increases spacing between letters */
+}
+
+.authenticationFrame .mat-raised-button {
+    box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for depth */
+    border: none;                /* Removes any default border */
+}
+
+.authenticationFrame .form-group {
+    margin-bottom: 15px;         /* Adds more space between form groups */
+}
+
+.authenticationFrame .modal-footer {
+    padding-top: 20px;           /* Adds padding above the footer area where buttons reside */
+    padding-bottom: 10px;
+    border-top: 1px solid #ccc;  /* Optional: adds a subtle line to separate the form from the buttons */
 }

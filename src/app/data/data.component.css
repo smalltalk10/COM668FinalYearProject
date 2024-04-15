@@ -1,0 +1,26 @@
+.chart-container {
+  margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap; /* Allows items to wrap to next line */
+    justify-content: space-between; /* Spaces out the charts on each row */
+  }
+  
+.chart-column {
+  display: flex;
+  width: 100%; /* Ensures each row takes full width */
+  justify-content: space-around; /* Distributes space around items */
+  margin-bottom: 20px; /* Adds space between the rows */
+}
+
+.chart-item {
+  flex: 1; /* Each chart flexes to fill the space */
+  margin: 5px; /* Adds a little margin around each chart */
+  border: 0.5px solid rgba(31, 158, 35, 1);
+  box-sizing: border-box;
+  border-radius: 10px;
+  background-color: rgba(31, 158, 35, 0.1)
+}
+
+[data-ag-charts] {
+  overflow: hidden;
+}
