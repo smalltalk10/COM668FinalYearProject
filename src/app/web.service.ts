@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { from, Observable } from 'rxjs';
+import { from, Observable, forkJoin } from 'rxjs';
 import { concatMap, tap } from 'rxjs/operators';
 
 @Injectable()
@@ -51,6 +51,19 @@ export class WebService {
       '?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2dhbufTAe3z1ejRAPIJ14nOcON-KB_h2MVEqFATn_0U',
       { headers }
     );
+  }
+
+  getCurrentWeather(lat: number, lng: number) {
+    const urlCurrent = `http://api.weatherapi.com/v1/current.json`;
+    const urlAstro = `http://api.weatherapi.com/v1/astronomy.json`;
+
+    const params = { key: 'a83539db50f54ff7a3a135159241704', q: `${lat},${lng}` };
+
+    // Using forkJoin to handle parallel requests
+    return forkJoin({
+      currentWeather: this.http.get(urlCurrent, { params }),
+      astroData: this.http.get(urlAstro, { params })
+    });
   }
 
   getAllDateRangeMeasurements(): Observable<any> {

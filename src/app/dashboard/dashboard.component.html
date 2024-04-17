@@ -1,78 +1,18 @@
-<div class="container" style="margin-top: 100px;">
-    <ng-container *ngFor="let current_measurement of current_measurements | async">
-        <div class="main-content">
-            <div class="team-content">
-                <span>
-                    <strong>User ID:</strong> {{ current_measurement.Body.userID }}
-                </span>
-                <h1 style="margin-top: 10px;"><strong>Soil Measurement Dashboard</strong></h1>
-                <span>
-                    <strong>Last updated:</strong> {{ current_measurement.Body.datetime | date: 'medium' }}
-                </span>
+<div class="main-container">
+    <ng-container *ngFor="let currentMeasurement of currentMeasurements | async">
+        <div class="card soil-dashboard-container">
+            <div class="card-header header-content">
+                <h1><strong>Soil Measurement Dashboard</strong></h1>
+                <span><strong>Last updated:</strong> {{ currentMeasurement.Body.datetime | date: 'medium' }}</span>
             </div>
-            <div class="row">
-                <div class="col-md-2 mb-4 character-card">
-                    <div class="card" style="cursor: pointer">
-                        <img src="./../assets/images/conditions/temperature.png" class="image">
+            <div class="row soil-dashboard-body">
+                <div class="col-md-custom mb-4" *ngFor="let gauge of gauges">
+                    <div class="card condition-card ">
+                        <img [src]="'./../assets/images/conditions/' + gauge.key + '.png'" class="image">
                         <ngx-gauge class="center" [size]="200" type="arch" [thick]="15"
-                            [value]="current_measurement?.Body?.temperature" label="Temperature" append="°C" [max]="60"
-                            [thresholds]="temperatureThresholds" [markers]="temperatureMarkers">
-                        </ngx-gauge>
-                    </div>
-                </div>
-                <div class="col-md-2 mb-4 character-card">
-                    <div class="card" style="cursor: pointer">
-                        <img src="./../assets/images/conditions/moisture.png" class="image">
-                        <ngx-gauge class="center" [size]="200" type="arch" [thick]="15"
-                            [value]="current_measurement?.Body?.moisture" label="Moisture" append="%" [max]="100"
-                            [thresholds]="moistureThresholds" [markers]="moistureMarkers">
-                        </ngx-gauge>
-                    </div>
-                </div>
-                <div class="col-md-2 mb-4 character-card">
-                    <div class="card" style="cursor: pointer">
-                        <img src="./../assets/images/conditions/salinity.png" class="image">
-                        <ngx-gauge class="center" [size]="200" type="arch" [thick]="15"
-                            [value]="current_measurement?.Body?.ec" label="Salinity" append="µS/cm" [max]="1200"
-                            [thresholds]="salinityThresholds" [markers]="salinityMarkers">
-                        </ngx-gauge>
-                    </div>
-                </div>
-                <div class="col-md-2 mb-4 character-card">
-                    <div class="card" style="cursor: pointer">
-                        <img src="./../assets/images/conditions/ph.png" class="image">
-                        <ngx-gauge class="center" [size]="200" type="arch" [thick]="15"
-                            [value]="current_measurement?.Body?.ph" label="pH" append="PH" [max]="14"
-                            [thresholds]="phThresholds" [markers]="phMarkers">
-                        </ngx-gauge>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2 mb-4 character-card">
-                    <div class="card" style="cursor: pointer">
-                        <img src="./../assets/images/conditions/nitrogen.png" class="image">
-                        <ngx-gauge class="center" [size]="200" type="arch" [thick]="15"
-                            [value]="current_measurement?.Body?.nitrogen" label="Nitrogen" append="mg/kg" [max]="100"
-                            [thresholds]="nitrogenThresholds" [markers]="nitrogenMarkers">
-                        </ngx-gauge>
-                    </div>
-                </div>
-                <div class="col-md-2 mb-4 character-card">
-                    <div class="card" style="cursor: pointer">
-                        <img src="./../assets/images/conditions/phosphorus.png" class="image">
-                        <ngx-gauge class="center" [size]="200" type="arch" [thick]="15"
-                            [value]="current_measurement?.Body?.phosphorus" label="Phosphorus" append="mg/kg"
-                            [max]="300" [thresholds]="phosphorusThresholds" [markers]="phosphorusMarkers">
-                        </ngx-gauge>
-                    </div>
-                </div>
-                <div class="col-md-2 mb-4 character-card">
-                    <div class="card" style="cursor: pointer">
-                        <img src="./../assets/images/conditions/potassium.png" class="image">
-                        <ngx-gauge class="center" [size]="200" type="arch" [thick]="15"
-                            [value]="current_measurement?.Body?.potassium" label="Potassium" append="mg/kg" [max]="500"
-                            [thresholds]="potassiumThresholds" [markers]="potassiumMarkers">
+                            [value]="currentMeasurement.Body[gauge.key]" [label]="gauge.name" [append]="gauge.unit"
+                            [max]="gauge.max" [thresholds]="gaugeSettings[gauge.key].thresholds"
+                            [markers]="gaugeSettings[gauge.key].markers">
                         </ngx-gauge>
                     </div>
                 </div>
@@ -80,13 +20,64 @@
         </div>
     </ng-container>
     <div *ngIf="isLocationLoaded">
-        <google-map height="500px" width="100%" [center]="mapCenter" [zoom]="zoom" (mapClick)="onMapClick($event)">
-            <map-marker [position]="markerPosition" [title]="currentPosition">
-            </map-marker>
-        </google-map>
+        <div class="card map-container">
+            <div class="card-header">
+                <h3><strong>{{deviceID}} Map Location</strong></h3>
+                <button *ngIf="positionsAreDifferent()" mat-raised-button color="accent"
+                    type="submit" (click)="onSubmitUpdateLocation()">Save New Location</button>
+            </div>
+            <div class="card-body">
+                <google-map height="600px" width="100%" [center]="mapCenter" [zoom]="zoom"
+                    (mapClick)="onMapClick($event)">
+                    <map-marker [position]="markerPosition" [title]="currentPosition"></map-marker>
+                </google-map>
+            </div>
+        </div>
     </div>
-    <button *ngIf="positionsAreDifferent()" mat-raised-button color="accent" style="margin-left: 190px;" type="submit"
-        (click)="onSubmitUpdateLocation()">
-        Save Changes
-    </button>
+    <div *ngIf="isWeatherLoaded">
+        <div class="card weather-container">
+            <div class="card-header">
+                <h3><strong>Current Weather at {{currentWeather.location.name}}, {{currentWeather.location.country}}</strong></h3>
+                <span><strong>Last updated:</strong> {{ currentWeather.current.last_updated | date: 'medium' }}</span>
+            </div>
+            <div class="card-body">
+                <div class="weather-info">
+                    <img src='{{currentWeather.current.condition.icon}}'>
+                    <p>Condition: {{currentWeather.current.condition.text}}</p>
+                </div>
+                <div class="weather-info">
+                    <img src='./../assets/images/weather/thermometer.png'>
+                    <p>Temp: {{currentWeather.current.temp_c}}°C</p>
+                </div>
+                <div class="weather-info">
+                    <img src='./../assets/images/weather/dew-point.png'>
+                    <p>Humidity: {{currentWeather.current.humidity}}%</p>
+                </div>
+                <div class="weather-info">
+                    <img src='./../assets/images/weather/uv.png'>
+                    <p>UV Index: {{currentWeather.current.uv}}</p>
+                </div>
+                <div class="weather-info">
+                    <img src='./../assets/images/weather/wet.png'>
+                    <p>Precip: {{currentWeather.current.precip_mm}} mm</p>
+                </div>
+                <div class="weather-info">
+                    <img src='./../assets/images/weather/wind.png'>
+                    <p>Wind: {{currentWeather.current.wind_mph}} mph ({{currentWeather.current.wind_dir}})</p>
+                </div>
+                <div class="weather-info">
+                    <img src='./../assets/images/weather/pressure.png'>
+                    <p>Pressure: {{currentWeather.current.pressure_mb}} millibars</p>
+                </div>
+                <div class="weather-info">
+                    <img src='./../assets/images/weather/sunrise.png'>
+                    <p>Sunrise: {{currentAstro.astro.sunrise}}</p>
+                </div>
+                <div class="weather-info">
+                    <img src='./../assets/images/weather/sunset.png'>
+                    <p>Sunset: {{currentAstro.astro.sunset}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

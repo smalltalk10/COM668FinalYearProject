@@ -22,6 +22,13 @@
   width: 100%;
 }
 
+.modal-header {
+  background-color: rgba(31, 158, 35, 1);
+  color: white;
+  border-bottom: 1px solid #3f5068;
+}
+
+
 .value-labels span {
   flex: 1; /* Gives equal space but allows for alignment tweaking */
   text-align: center; /* Center text by default */

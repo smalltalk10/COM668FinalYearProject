@@ -24,9 +24,9 @@
                 <div class="grid-container">
                     <label class="grid-label" style="margin-top: 15px"><b>Soil Condition</b></label>
                     <div class="center d-flex value-labels" style="margin-top: 15px">
-                        <span class="left"><b>Min Value</b></span>
+                        <span class="left"><b>Lower Threshold</b></span>
                         <span class="center"><b>Use Slider to select Lower and Upper Threshold Range</b></span>
-                        <span class="right"><b>Max Value</b></span>
+                        <span class="right"><b>Upper Threshold</b></span>
                     </div>
                     <ng-container *ngFor="let condition of selectedThreshold.selectedConditions; let i = index">
                         <label class="grid-label">{{ condition.name }}</label>
@@ -68,9 +68,9 @@
                 <div class="grid-container">
                     <label class="grid-label" style="margin-top: 15px"><b>Soil Condition</b></label>
                     <div class="center d-flex value-labels" style="margin-top: 15px">
-                        <span class="left"><b>Min Value</b></span>
+                        <span class="left"><b>Lower Threshold</b></span>
                         <span class="center"><b>Use Slider to select Lower and Upper Threshold Range</b></span>
-                        <span class="right"><b>Max Value</b></span>
+                        <span class="right"><b>Upper Threshold</b></span>
                     </div>
                     <ng-container *ngFor="let condition of conditions; let i = index">
                         <label class="grid-label">{{ condition.name }}</label>
