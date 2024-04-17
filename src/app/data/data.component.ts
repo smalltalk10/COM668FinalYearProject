@@ -31,6 +31,7 @@ interface Statistics {
   templateUrl: './data.component.html',
   styleUrls: ['./data.component.css'],
 })
+
 export class DataComponent implements OnInit {
   dateRange = 'day';
   public rowData: any[] = [];
@@ -58,7 +59,7 @@ export class DataComponent implements OnInit {
   constructor(private webService: WebService) {}
 
   ngOnInit() {
-    // this.webService.fetchAllDateRangeMeasurements().subscribe();
+    this.webService.getAllDateRangeMeasurements().subscribe();
     this.updateChartDataBasedOnRange();
   }
 

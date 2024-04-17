@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "AgriInsight": {
+    "D1Biz": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/agri-insight",
+            "outputPath": "dist/d1-biz",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -62,10 +62,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "Agri-Insight:build:production"
+              "browserTarget": "D1Biz:build:production"
             },
             "development": {
-              "browserTarget": "Agri-Insight:build:development"
+              "browserTarget": "D1Biz:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -73,7 +73,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Agri-Insight:build"
+            "browserTarget": "D1Biz:build"
           }
         },
         "test": {

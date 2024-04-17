@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { WebService } from '../web.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AuthenticationModalComponent } from './loginModal/authentication.modal.component';
+import { ThresholdModalComponent } from './thresholdModal/threshold.modal.component';
 
 @Component({
   selector: 'navigation',
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.css'],
 })
-
 export class NavComponent {
   constructor(
     public webService: WebService,
@@ -19,7 +18,9 @@ export class NavComponent {
 
   sessionStorage: Storage = window.sessionStorage;
 
-  onOpenAuthenticationModal() {
-    this.modalService.open(AuthenticationModalComponent, {});
+  onOpenThresholdModal() {
+    this.modalService.open(ThresholdModalComponent, {
+      windowClass: 'custom-large-modal',
+    });
   }
 }

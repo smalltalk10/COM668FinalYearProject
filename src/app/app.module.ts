@@ -1,5 +1,6 @@
 // Imported Modules
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { WebService } from './web.service';
@@ -10,22 +11,25 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AgGridModule } from 'ag-grid-angular';
 import { AgChartsAngular } from 'ag-charts-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxGaugeModule } from 'ngx-gauge';
+import { GoogleMapsModule } from '@angular/google-maps'
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatBadgeModule } from '@angular/material/badge';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSliderModule } from '@angular/material/slider';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { NgxGaugeModule } from 'ngx-gauge';
-import { GoogleMapsModule } from '@angular/google-maps'
 
 // My Componenets
 import { NavComponent } from './nav/nav.component';
 import { HomeComponent } from './home/home.component';
-import { AuthenticationModalComponent } from './nav/loginModal/authentication.modal.component';
+import { ThresholdModalComponent } from './nav/thresholdModal/threshold.modal.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DataComponent } from './data/data.component'
+import { ActiveBtnCellRendererComponent } from './nav/thresholdModal/cellRenderers/activeBtnCellRenderer.component';
 
 var routes: any = [
   {
@@ -47,9 +51,10 @@ var routes: any = [
     HomeComponent,
     AppComponent,
     NavComponent,
-    AuthenticationModalComponent,
+    ThresholdModalComponent,
     DashboardComponent,
-    DataComponent
+    DataComponent,
+    ActiveBtnCellRendererComponent
   ],
   imports: [
     BrowserModule,
@@ -60,15 +65,17 @@ var routes: any = [
     AgGridModule,
     AgChartsAngular,
     BrowserAnimationsModule,
+    NgxGaugeModule,
+    GoogleMapsModule,
+    FormsModule,
     MatIconModule,
     MatButtonModule,
+    MatMenuModule,
     MatInputModule,
     MatTabsModule,
     MatBadgeModule,
-    MatPaginatorModule,
-    MatExpansionModule,
-    NgxGaugeModule,
-    GoogleMapsModule
+    MatSliderModule,
+    MatExpansionModule
   ],
   providers: [WebService],
   bootstrap: [AppComponent],

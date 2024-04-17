@@ -1,6 +1,4 @@
 @import '@angular/material/theming';
-@import 'ag-grid-community/styles/ag-grid.css';
-@import 'ag-grid-community/styles/ag-theme-quartz.css';
 
 // Define your color palettes
 $primary: mat-palette($mat-green);
@@ -13,6 +11,11 @@ $theme: mat-light-theme(
   $accent,
   $warn
 );
+
+.custom-large-modal .modal-dialog {
+  max-width: 80% !important; /* Increase width and use !important to override default styles */
+  min-width: 800px !important; /* Set a minimum width if necessary */
+}
 
 // Include base styles for common typographic elements
 @include mat-core();

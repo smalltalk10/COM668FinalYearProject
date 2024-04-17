@@ -1,0 +1,101 @@
+<div class="modal-header">
+    <h4 class="modal-title">Create & Edit Your Threshold Configurations</h4>
+</div>
+<div class="modal-body">
+    <mat-form-field>
+        <mat-label>Quick Filter</mat-label>
+        <input matInput type="text" id="filter-text-box" placeholder="Filter..." (input)="onFilterTextBoxChanged()">
+    </mat-form-field>
+    <ag-grid-angular class="ag-theme-quartz threshold-grid" [columnDefs]="colDefs" [rowData]="rowData"
+        [gridOptions]="gridOptions" rowSelection="single" (gridReady)="onGridReady($event)"
+        [autoSizeStrategy]="autoSizeStrategy" [rowSelection]="rowSelection"
+        (selectionChanged)="onSelectionChanged($event)">
+    </ag-grid-angular>
+    <hr>
+    <ng-container *ngIf="selectedThreshold?.selectedConditions?.length > 0; else noThreshold">
+        <div class="card mb-3 edit-threshold-container">
+            <div class="card-header center">
+                <mat-panel-title><b>Update Alerts for: "{{selectedThreshold.name}}"</b></mat-panel-title>
+                <button mat-fab color="warn" class="remove-icon" (click)="onSubmitDeleteThreshold()">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="grid-container">
+                    <label class="grid-label" style="margin-top: 15px"><b>Soil Condition</b></label>
+                    <div class="center d-flex value-labels" style="margin-top: 15px">
+                        <span class="left"><b>Min Value</b></span>
+                        <span class="center"><b>Use Slider to select Lower and Upper Threshold Range</b></span>
+                        <span class="right"><b>Max Value</b></span>
+                    </div>
+                    <ng-container *ngFor="let condition of selectedThreshold.selectedConditions; let i = index">
+                        <label class="grid-label">{{ condition.name }}</label>
+                        <div class="slider-container d-flex align-items-center">
+                            <label class="slider-label">{{ condition.currentLowValue }}</label>
+                            <mat-slider class="flex-grow-1 mx-2" [displayWith]="formatLabel" [min]="condition.minValue"
+                                [max]="condition.maxValue">
+                                <input matSliderStartThumb [(ngModel)]="condition.currentLowValue">
+                                <input matSliderEndThumb [(ngModel)]="condition.currentHighValue">
+                            </mat-slider>
+                            <label class="slider-label">{{ condition.currentHighValue }}</label>
+                        </div>
+                    </ng-container>
+                    <label for="name" class="grid-label">Enter Alert Name:</label>
+                    <form [formGroup]="newThresholdForm" (ngSubmit)="onSubmitUpdateThreshold()" class="form-row">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" class="form-control" formControlName="name" />
+                        </div>
+                        <span *ngIf="nameInvalid()" class="error-text">Please Enter an Alert Name</span>
+                        <button *ngIf="!nameInvalid()" mat-raised-button type="submit" color="accent">
+                            Update Alert
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #noThreshold>
+        <mat-accordion>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <b>Create New Alert</b>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        Open to create a new alert.
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div class="grid-container">
+                    <label class="grid-label" style="margin-top: 15px"><b>Soil Condition</b></label>
+                    <div class="center d-flex value-labels" style="margin-top: 15px">
+                        <span class="left"><b>Min Value</b></span>
+                        <span class="center"><b>Use Slider to select Lower and Upper Threshold Range</b></span>
+                        <span class="right"><b>Max Value</b></span>
+                    </div>
+                    <ng-container *ngFor="let condition of conditions; let i = index">
+                        <label class="grid-label">{{ condition.name }}</label>
+                        <div class="slider-container d-flex align-items-center">
+                            <label class="slider-label">{{ condition.currentLowValue }}</label>
+                            <mat-slider class="flex-grow-1 mx-2" [displayWith]="formatLabel" [min]="condition.minValue"
+                                [max]="condition.maxValue">
+                                <input matSliderStartThumb [(ngModel)]="condition.currentLowValue">
+                                <input matSliderEndThumb [(ngModel)]="condition.currentHighValue">
+                            </mat-slider>
+                            <label class="slider-label">{{ condition.currentHighValue }}</label>
+                        </div>
+                    </ng-container>
+                    <label for="name" class="grid-label">Enter Alert Name:</label>
+                    <form [formGroup]="newThresholdForm" (ngSubmit)="onSubmitCreateThreshold()" class="form-row">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" class="form-control" formControlName="name" />
+                        </div>
+                        <span *ngIf="nameInvalid()" class="error-text">Please Enter an Alert Name</span>
+                        <button *ngIf="!nameInvalid()" mat-raised-button type="submit" color="accent">
+                            Save Alert
+                        </button>
+                    </form>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </ng-template>
+</div>

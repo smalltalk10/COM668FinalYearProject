@@ -6,9 +6,9 @@
         <a class="nav-link" routerLink="/dashboard">Dashboard</a>
       </li>
       <li class="nav-item">
-      <a class="nav-link" routerLink="/data">Historic Data</a>
-    </li>
-    <!-- <li class="nav-item">
+        <a class="nav-link" routerLink="/data">Historic Data</a>
+      </li>
+      <!-- <li class="nav-item">
       <a class="nav-link" routerLink="/forecast">Forecast</a>
     </li> -->
     </ul>
@@ -17,12 +17,25 @@
   </ng-template>
   <div class="form-inline ms-auto">
     <ng-container *ngIf="sessionStorage.getItem('token'); else loggedOut">
-      
+      <button style="margin-right: 10px;" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+        <mat-icon style="color: white;">menu</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+          <mat-icon>sensors</mat-icon>
+          <span>IoT Device</span>
+        </button>
+        <button mat-menu-item  (click)="onOpenThresholdModal()">
+          <mat-icon>circle_notifications</mat-icon>
+          <span>Threshold Notifications</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>person</mat-icon>
+          <span>User Profile</span>
+        </button>
+      </mat-menu>
     </ng-container>
     <ng-template #loggedOut>
-      <button mat-raised-button color="accent" style="margin-right: 10px;" (click)="onOpenAuthenticationModal()">
-        Login/Register
-      </button>
     </ng-template>
   </div>
 </div>

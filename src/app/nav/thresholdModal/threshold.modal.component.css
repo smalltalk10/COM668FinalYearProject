@@ -1,0 +1,107 @@
+.custom-large-modal .modal-dialog {
+  max-width: 90%;
+  height: auto; 
+  }
+
+.threshold-grid {
+  height: 20vh;
+  width: 100%; 
+  }  
+  
+.edit-threshold-container {
+  height: 45vh;
+  background-color: rgba(31, 158, 35, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, .3);
+  }
+
+.center {
+  display: flex;
+  justify-content: space-between; /* Ensures maximum space between children */
+  align-items: center;
+  width: 100%;
+}
+
+.value-labels span {
+  flex: 1; /* Gives equal space but allows for alignment tweaking */
+  text-align: center; /* Center text by default */
+}
+
+.value-labels .left {
+  text-align: left; /* Align text to the left for the first span */
+}
+
+.value-labels .right {
+  text-align: right; /* Align text to the right for the third span */
+}
+
+/* Ensure the middle span centers its content exactly */
+.value-labels .center {
+  text-align: center;
+}
+  
+mat-form-field {
+  margin-bottom: -30px;
+}
+
+mat-expansion-panel {
+  background-color: rgba(31, 158, 35, 0.1);
+}
+
+.slider-label {
+  min-width: 35px;
+  text-align: center;
+}
+
+.mat-slider {
+  flex-grow: 1;
+  margin: 0 12px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.grid-label {
+  grid-column: 1;
+}
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  grid-column: 2;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  grid-column: 2;
+}
+
+.form-group {
+  margin-left: 40px;
+  width: 400px;
+}
+
+.error-text {
+  margin-left: auto;
+}
+
+button {
+  margin-left: auto;
+}
+
+.remove-icon{
+  transform: scale(.65);
+  float: right;
+  margin-top: -20px;
+  margin-bottom: -20px;
+}
+
+.no-pointer {
+  pointer-events: none; /* Disables mouse interactions */
+}

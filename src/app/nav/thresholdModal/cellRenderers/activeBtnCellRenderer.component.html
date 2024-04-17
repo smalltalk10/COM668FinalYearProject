@@ -1,0 +1,6 @@
+<ng-container *ngIf="isActive !== 'true'; else alreadyActivated">
+    <button mat-raised-button color="accent" (click)="setAsActive()">Activate</button>
+</ng-container>
+<ng-template #alreadyActivated>
+    <button mat-raised-button color="warn" (click)="setAsDisactive()">Disactivate</button>
+</ng-template>

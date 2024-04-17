@@ -25,7 +25,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.loadCurrentMeasurements();
     this.loadLocation();
-    this.webService.fetchAllDateRangeMeasurements().subscribe();
+    // this.webService.getAllDateRangeMeasurements().subscribe();
   }
 
   loadCurrentMeasurements() {
@@ -123,7 +123,7 @@ export class DashboardComponent implements OnInit {
   salinityThresholds = {
     '0': { color: 'red', bgOpacity: 0.2 },
     '100': { color: 'orange', bgOpacity: 0.2 },
-    '200': { color: 'green', bgOpacity: 0.2 },
+    '400': { color: 'green', bgOpacity: 0.2 },
     '800': { color: 'orange', bgOpacity: 0.2 },
     '1000': { color: 'red', bgOpacity: 0.2 },
   };
@@ -131,7 +131,7 @@ export class DashboardComponent implements OnInit {
   salinityMarkers = {
     '0': { color: '#555', size: 4, label: '0', font: '12px arial' },
     '100': { color: '#555', size: 4, label: '100', font: '12px arial' },
-    '200': { color: '#555', size: 4, label: '200', font: '12px arial' },
+    '400': { color: '#555', size: 4, label: '400', font: '12px arial' },
     '800': { color: '#555', size: 4, label: '800', font: '12px arial' },
     '1000': { color: '#555', size: 4, label: '1000', font: '12px arial' },
     '1200': { color: '#555', size: 4, label: '1200+', font: '12px arial' },
@@ -157,15 +157,15 @@ export class DashboardComponent implements OnInit {
   nitrogenThresholds = {
     '0': { color: 'red', bgOpacity: 0.2 },
     '10': { color: 'orange', bgOpacity: 0.2 },
-    '20': { color: 'green', bgOpacity: 0.2 },
-    '60': { color: 'orange', bgOpacity: 0.4 },
-    '80': { color: 'red', bgOpacity: 0.4 },
+    '30': { color: 'green', bgOpacity: 0.2 },
+    '60': { color: 'orange', bgOpacity: 0.2 },
+    '80': { color: 'red', bgOpacity: 0.2 },
   };
 
   nitrogenMarkers = {
     '0': { color: '#555', size: 4, label: '0', font: '12px arial' },
-    '10': { color: '#555', size: 3, label: '10', font: '12px arial' },
-    '20': { color: '#555', size: 4, label: '20', font: '12px arial' },
+    '15': { color: '#555', size: 3, label: '15', font: '12px arial' },
+    '30': { color: '#555', size: 4, label: '30', font: '12px arial' },
     '60': { color: '#555', size: 4, label: '60', font: '12px arial' },
     '80': { color: '#555', size: 4, label: '80', font: '12px arial' },
     '100': { color: '#555', size: 4, label: '100+', font: '12px arial' },
@@ -175,8 +175,8 @@ export class DashboardComponent implements OnInit {
     '0': { color: 'red', bgOpacity: 0.2 },
     '30': { color: 'orange', bgOpacity: 0.2 },
     '50': { color: 'green', bgOpacity: 0.2 },
-    '200': { color: 'orange', bgOpacity: 0.4 },
-    '250': { color: 'red', bgOpacity: 0.4 },
+    '200': { color: 'orange', bgOpacity: 0.2 },
+    '250': { color: 'red', bgOpacity: 0.2 },
   };
 
   phosphorusMarkers = {
@@ -192,8 +192,8 @@ export class DashboardComponent implements OnInit {
     '0': { color: 'red', bgOpacity: 0.2 },
     '100': { color: 'orange', bgOpacity: 0.2 },
     '150': { color: 'green', bgOpacity: 0.2 },
-    '350': { color: 'orange', bgOpacity: 0.4 },
-    '400': { color: 'red', bgOpacity: 0.4 },
+    '350': { color: 'orange', bgOpacity: 0.2 },
+    '400': { color: 'red', bgOpacity: 0.2 },
   };
 
   potassiumMarkers = {
