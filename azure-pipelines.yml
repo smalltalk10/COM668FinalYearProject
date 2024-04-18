@@ -25,7 +25,7 @@ steps:
   inputs:
     app_location: '/'             # Set this to the root or where your Angular app is located
     api_location: ''              # Set to 'api' if you have an API, otherwise leave empty
-    output_location: 'dist/agri-insight'  # Adjust 'project-name' to match your actual output folder
+    output_location: 'dist/d1-biz'  # Adjust 'project-name' to match your actual output folder
     azure_static_web_apps_api_token: "a4f523c4a6900f5d0f98c0243e305c833c8e28378e9b1745549449595441a0d55-e96f017a-edb1-423a-a4e0-29bc648cb02b003424417"  # Use variable for security
   displayName: 'Deploy to Azure Static Web Apps'
   
