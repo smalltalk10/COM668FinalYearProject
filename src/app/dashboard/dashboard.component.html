@@ -1,8 +1,13 @@
+<div class="filter-bar">
+    <h2></h2>
+    <h1>Current Conditions Dashboard</h1>
+    <h2></h2>
+</div>
 <div class="main-container">
     <ng-container *ngFor="let currentMeasurement of currentMeasurements | async">
         <div class="card soil-dashboard-container">
             <div class="card-header header-content">
-                <h1><strong>Soil Measurement Dashboard</strong></h1>
+                <h2>Soil Measurements</h2>
                 <span><strong>Last updated:</strong> {{ currentMeasurement.Body.datetime | date: 'medium' }}</span>
             </div>
             <div class="row soil-dashboard-body">
@@ -22,7 +27,7 @@
     <div *ngIf="isLocationLoaded">
         <div class="card map-container">
             <div class="card-header">
-                <h3><strong>{{deviceID}} Map Location</strong></h3>
+                <h2>{{deviceID}} Map Location</h2>
                 <button *ngIf="positionsAreDifferent()" mat-raised-button color="accent"
                     type="submit" (click)="onSubmitUpdateLocation()">Save New Location</button>
             </div>
@@ -37,43 +42,43 @@
     <div *ngIf="isWeatherLoaded">
         <div class="card weather-container">
             <div class="card-header">
-                <h3><strong>Current Weather at {{currentWeather.location.name}}, {{currentWeather.location.country}}</strong></h3>
+                <h2>Current Weather for {{currentWeather.location.name}}, {{currentWeather.location.country}}</h2>
                 <span><strong>Last updated:</strong> {{ currentWeather.current.last_updated | date: 'medium' }}</span>
             </div>
             <div class="card-body">
-                <div class="weather-info">
+                <div class="weather-card">
                     <img src='{{currentWeather.current.condition.icon}}'>
                     <p>Condition: {{currentWeather.current.condition.text}}</p>
                 </div>
-                <div class="weather-info">
+                <div class="weather-card">
                     <img src='./../assets/images/weather/thermometer.png'>
                     <p>Temp: {{currentWeather.current.temp_c}}°C</p>
                 </div>
-                <div class="weather-info">
+                <div class="weather-card">
                     <img src='./../assets/images/weather/dew-point.png'>
                     <p>Humidity: {{currentWeather.current.humidity}}%</p>
                 </div>
-                <div class="weather-info">
+                <div class="weather-card">
                     <img src='./../assets/images/weather/uv.png'>
                     <p>UV Index: {{currentWeather.current.uv}}</p>
                 </div>
-                <div class="weather-info">
+                <div class="weather-card">
                     <img src='./../assets/images/weather/wet.png'>
-                    <p>Precip: {{currentWeather.current.precip_mm}} mm</p>
+                    <p>Precipitation: {{currentWeather.current.precip_mm}} mm</p>
                 </div>
-                <div class="weather-info">
+                <div class="weather-card">
                     <img src='./../assets/images/weather/wind.png'>
                     <p>Wind: {{currentWeather.current.wind_mph}} mph ({{currentWeather.current.wind_dir}})</p>
                 </div>
-                <div class="weather-info">
+                <div class="weather-card">
                     <img src='./../assets/images/weather/pressure.png'>
                     <p>Pressure: {{currentWeather.current.pressure_mb}} millibars</p>
                 </div>
-                <div class="weather-info">
+                <div class="weather-card">
                     <img src='./../assets/images/weather/sunrise.png'>
                     <p>Sunrise: {{currentAstro.astro.sunrise}}</p>
                 </div>
-                <div class="weather-info">
+                <div class="weather-card">
                     <img src='./../assets/images/weather/sunset.png'>
                     <p>Sunset: {{currentAstro.astro.sunset}}</p>
                 </div>

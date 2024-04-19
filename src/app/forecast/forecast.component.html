@@ -1,0 +1,38 @@
+<div class="filter-bar">
+    <h2>{{forecastedWeather.location.name}}, {{forecastedWeather.location.country}}</h2>
+    <h1>14-Day Weather Forecast</h1>
+</div>
+<div class="main-container">
+    <div class="forecast-container">
+        <div class="forecast-card" *ngFor="let day of forecastedWeather.forecast.forecastday">
+            <div class="card-body">
+                <h2>{{ day.date | date:'EEEE' }}</h2>
+                <h2>{{ day.date }}</h2>
+                <img src='{{day.day.condition.icon}}'>
+                <p id="max-temp">{{ day.day.maxtemp_c }}°C</p>
+                <p id="min-temp">{{ day.day.mintemp_c }}°C</p>
+                <p>Rain: {{ day.day.totalprecip_mm }}mm</p>
+                <p>Hum: {{ day.day.avghumidity }}%</p>
+                <p>Max Wind: {{ day.day.maxwind_mph }}mph</p>
+                <p>UV: {{ day.day.uv }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="chart-card">
+        <div class="card-header">
+            Temperature Overview (°C)
+        </div>
+        <div *ngIf="temperatureChartOptions">
+            <ag-charts-angular [options]="temperatureChartOptions"></ag-charts-angular>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <div class="card-header">
+            Moisture Overview (%)
+        </div>
+        <div *ngIf="precipitationChartOptions">
+            <ag-charts-angular [options]="precipitationChartOptions"></ag-charts-angular>
+        </div>
+    </div>
+</div>

@@ -59,12 +59,20 @@ export class WebService {
 
     const params = { key: 'a83539db50f54ff7a3a135159241704', q: `${lat},${lng}` };
 
-    // Using forkJoin to handle parallel requests
     return forkJoin({
       currentWeather: this.http.get(urlCurrent, { params }),
       astroData: this.http.get(urlAstro, { params })
     });
   }
+
+  getForecastedWeather(lat: number, lng: number) {
+    const urlCurrent = `http://api.weatherapi.com/v1/forecast.json`;
+    const params = { key: 'a83539db50f54ff7a3a135159241704', q: `${lat},${lng}`, days: 15 };
+
+    return this.http.get(urlCurrent, { params });
+  }
+
+
 
   getAllDateRangeMeasurements(): Observable<any> {
     const dateRanges = ['day', 'week', 'month'];

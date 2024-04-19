@@ -4,7 +4,7 @@
   }
 
 .threshold-grid {
-  height: 20vh;
+  height: 25vh;
   width: 100%; 
   }  
   
@@ -28,21 +28,19 @@
   border-bottom: 1px solid #3f5068;
 }
 
-
 .value-labels span {
-  flex: 1; /* Gives equal space but allows for alignment tweaking */
-  text-align: center; /* Center text by default */
+  flex: 1;
+  text-align: center;
 }
 
 .value-labels .left {
-  text-align: left; /* Align text to the left for the first span */
+  text-align: left;
 }
 
 .value-labels .right {
-  text-align: right; /* Align text to the right for the third span */
+  text-align: right;
 }
 
-/* Ensure the middle span centers its content exactly */
 .value-labels .center {
   text-align: center;
 }

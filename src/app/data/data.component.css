@@ -1,26 +1,92 @@
-.chart-container {
-  margin-top: 15px;
-    display: flex;
-    flex-wrap: wrap; /* Allows items to wrap to next line */
-    justify-content: space-between; /* Spaces out the charts on each row */
-  }
-  
-.chart-column {
+.filter-bar {
+  background-color: rgba(20, 100, 20, 0.5);
+  height: 55px;
   display: flex;
-  width: 100%; /* Ensures each row takes full width */
-  justify-content: space-around; /* Distributes space around items */
-  margin-bottom: 20px; /* Adds space between the rows */
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 53px;
+  border-radius: 8px;
+  position: relative;
 }
 
-.chart-item {
-  flex: 1; /* Each chart flexes to fill the space */
-  margin: 5px; /* Adds a little margin around each chart */
-  border: 0.5px solid rgba(31, 158, 35, 1);
-  box-sizing: border-box;
-  border-radius: 10px;
-  background-color: rgba(31, 158, 35, 0.1)
+.filter-bar h1 {
+  color: white;
+  font-size: 30px;
+  font-weight: 300;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 50%;
+  transform: translateY(-50%) translateX(-50%);
 }
+
+.main-container {
+  margin-top: 20px;
+  padding: 0 1.3vw;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+.mat-tab-group {
+  flex: 1;
+  font-size: x-large;
+}
+
+mat-tab-group{
+  margin-top: 5px;
+  font-size: large;
+
+}
+
+::ng-deep .mat-mdc-tab-group .mat-mdc-tab .mdc-tab__text-label,
+::ng-deep .mat-mdc-tab-group .mat-mdc-tab-link .mdc-tab__text-label {
+    color: rgba(255, 255, 255, 1);
+    font-weight: 300;
+}
+
+.chart-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 10px;
+  font-size: large;
+  background-color: rgba(31, 158, 35, 1);
+  color: white;
+  font-weight: 300;
+  text-align: center;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.chart-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  height: 28.5vh;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.card-body {
+    padding: 10px;
+    flex-grow: 1;
+}
+
+.stats-grid {
+  height: 22.5vh;
+  width: 100%; 
+  }  
+  
 
 [data-ag-charts] {
-  overflow: hidden;
+    overflow: hidden;
 }

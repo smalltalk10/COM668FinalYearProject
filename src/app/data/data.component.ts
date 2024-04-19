@@ -31,30 +31,31 @@ interface Statistics {
   templateUrl: './data.component.html',
   styleUrls: ['./data.component.css'],
 })
-
 export class DataComponent implements OnInit {
   dateRange = 'day';
-  public rowData: any[] = [];
-  public colDefs: ColDef[] = [
-    { field: "condition" },
-    { field: "average" },
-    { field: "median" },
-    { field: "standardDeviation" },
-    { field: "minValue" },
-    { field: "maxValue" },
-    { field: "percentile25" },
-    { field: "percentile75" }
+  title = 'Daily';
+
+  rowData: any[] = [];
+  colDefs: ColDef[] = [
+    { field: 'condition' },
+    { field: 'average' },
+    { field: 'median' },
+    { field: 'standardDeviation' },
+    { field: 'minValue' },
+    { field: 'maxValue' },
+    { field: 'percentile25' },
+    { field: 'percentile75' },
   ];
 
   autoSizeStrategy: any = {
     type: 'fitGridWidth',
   };
 
-  public temperatureChartOptions: AgChartOptions | null = null;
-  public moistureChartOptions: AgChartOptions | null = null;
-  public salinityChartOptions: AgChartOptions | null = null;
-  public phChartOptions: AgChartOptions | null = null;
-  public npkChartOptions: AgChartOptions | null = null;
+  temperatureChartOptions: AgChartOptions | null = null;
+  moistureChartOptions: AgChartOptions | null = null;
+  salinityChartOptions: AgChartOptions | null = null;
+  phChartOptions: AgChartOptions | null = null;
+  npkChartOptions: AgChartOptions | null = null;
 
   constructor(private webService: WebService) {}
 
@@ -77,9 +78,9 @@ export class DataComponent implements OnInit {
       ph: [],
       nitrogen: [],
       phosphorus: [],
-      potassium: []
+      potassium: [],
     };
-    data.forEach(d => {
+    data.forEach((d) => {
       statistics.moisture.push(d.Body.moisture);
       statistics.temperature.push(d.Body.temperature);
       statistics.ec.push(d.Body.ec);
@@ -89,9 +90,9 @@ export class DataComponent implements OnInit {
       statistics.potassium.push(d.Body.potassium);
     });
 
-    return Object.keys(statistics).map(key => ({
+    return Object.keys(statistics).map((key) => ({
       condition: key,
-      ...this.calculateStatistics(statistics[key as keyof Statistics])
+      ...this.calculateStatistics(statistics[key as keyof Statistics]),
     }));
   }
 
@@ -99,12 +100,17 @@ export class DataComponent implements OnInit {
     values.sort((a, b) => a - b);
     const average = values.reduce((sum, val) => sum + val, 0) / values.length;
     const mid = Math.floor(values.length / 2);
-    const median = values.length % 2 !== 0 ? values[mid] : (values[mid - 1] + values[mid]) / 2;
+    const median =
+      values.length % 2 !== 0
+        ? values[mid]
+        : (values[mid - 1] + values[mid]) / 2;
     const min = values[0];
     const max = values[values.length - 1];
     const percentile25 = values[Math.floor(0.25 * values.length)];
     const percentile75 = values[Math.floor(0.75 * values.length)];
-    const variance = values.reduce((acc, val) => acc + (val - average) ** 2, 0) / values.length;
+    const variance =
+      values.reduce((acc, val) => acc + (val - average) ** 2, 0) /
+      values.length;
     const standardDeviation = Math.sqrt(variance);
 
     return {
@@ -114,7 +120,7 @@ export class DataComponent implements OnInit {
       minValue: min.toFixed(2),
       maxValue: max.toFixed(2),
       percentile25: percentile25.toFixed(2),
-      percentile75: percentile75.toFixed(2)
+      percentile75: percentile75.toFixed(2),
     };
   }
 
@@ -123,12 +129,15 @@ export class DataComponent implements OnInit {
     switch (this.dateRange) {
       case 'day':
         data = this.webService.dayData;
+        this.title = 'Daily';
         break;
       case 'week':
         data = this.webService.weekData;
+        this.title = 'Weekly';
         break;
       case 'month':
         data = this.webService.monthData;
+        this.title = 'Monthly';
         break;
     }
     this.updateChartData(data);
@@ -163,34 +172,29 @@ export class DataComponent implements OnInit {
     this.temperatureChartOptions = this.createChartOptions(
       formattedData,
       'temperature',
-      'Temperature',
       'Degress Celcuius (°C)',
       tickInterval
     );
     this.moistureChartOptions = this.createChartOptions(
       formattedData,
       'moisture',
-      'Moisture',
       'Moisutre Percentage (%)',
       tickInterval
     );
     this.salinityChartOptions = this.createChartOptions(
       formattedData,
       'salinity',
-      'Salinity',
-      'Microsiemen pr Centimeter (µS/cm)',
+      'Microsiemen per Centimeter (µS/cm)',
       tickInterval
     );
     this.phChartOptions = this.createChartOptions(
       formattedData,
       'ph',
-      'pH',
       'pH Scale (pH)',
       tickInterval
     );
     this.npkChartOptions = this.createNpkChartOptions(
       formattedData,
-      'Nitrogen, Phosphorus and Potassium',
       tickInterval
     );
   }
@@ -198,20 +202,17 @@ export class DataComponent implements OnInit {
   private createChartOptions(
     data: any[],
     yKey: string,
-    title: string,
     format: string,
     tickInterval: any
   ): AgChartOptions {
     return {
       autoSize: true,
-      title: { text: `Soil ${title} Levels`, fontWeight: 'bold' },
       data: data,
       series: [
         {
           type: 'line',
           xKey: 'datetime',
           yKey: yKey,
-          yName: title,
           marker: { enabled: false },
         },
       ],
@@ -233,21 +234,16 @@ export class DataComponent implements OnInit {
           },
         },
       ],
-      legend: { enabled: true, position: 'right' },
-      background: {
-        fill: 'rgba(0, 0, 0, 0)',
-      },
+      legend: { enabled: true, position: 'top' },
     };
   }
 
   private createNpkChartOptions(
     data: any[],
-    title: string,
     tickInterval: any
   ): AgChartOptions {
     return {
       autoSize: true,
-      title: { text: `Soil ${title} Levels`, fontWeight: 'bold' },
       data: data,
       series: [
         {
@@ -290,10 +286,7 @@ export class DataComponent implements OnInit {
           },
         },
       ],
-      legend: { enabled: true, position: 'right' },
-      background: {
-        fill: 'rgba(0, 0, 0, 0)',
-      },
+      legend: { enabled: true, position: 'top' },
     };
   }
 }

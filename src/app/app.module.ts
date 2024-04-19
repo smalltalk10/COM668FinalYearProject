@@ -26,10 +26,13 @@ import { MatExpansionModule } from '@angular/material/expansion';
 // My Componenets
 import { NavComponent } from './nav/nav.component';
 import { HomeComponent } from './home/home.component';
-import { ThresholdModalComponent } from './nav/thresholdModal/threshold.modal.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DataComponent } from './data/data.component'
+import { ForecastComponent } from './forecast/forecast.component'
+
+import { ThresholdModalComponent } from './nav/thresholdModal/threshold.modal.component';
 import { ActiveBtnCellRendererComponent } from './nav/thresholdModal/cellRenderers/activeBtnCellRenderer.component';
+
 
 var routes: any = [
   {
@@ -44,6 +47,10 @@ var routes: any = [
     path: 'data',
     component: DataComponent,
   },
+  {
+    path: 'forecast',
+    component: ForecastComponent,
+  },
 ];
 
 @NgModule({
@@ -54,7 +61,8 @@ var routes: any = [
     ThresholdModalComponent,
     DashboardComponent,
     DataComponent,
-    ActiveBtnCellRendererComponent
+    ActiveBtnCellRendererComponent,
+    ForecastComponent
   ],
   imports: [
     BrowserModule,

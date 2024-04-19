@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.loadCurrentMeasurements();
     this.loadLocation();
-    // this.webService.getAllDateRangeMeasurements().subscribe();
+    this.webService.getAllDateRangeMeasurements().subscribe();
   }
 
   loadCurrentMeasurements() {
@@ -61,6 +61,8 @@ export class DashboardComponent implements OnInit {
   handleLocationResponse(response: any) {
     const latitude = parseFloat(response.lat);
     const longitude = parseFloat(response.lng);
+    sessionStorage.setItem('lat', latitude.toString())
+    sessionStorage.setItem('lng', longitude.toString())
     this.initialPosition = { lat: latitude, lng: longitude };
     if (!isNaN(latitude) && !isNaN(longitude)) {
       this.updateMapLocation(latitude, longitude);
@@ -84,10 +86,8 @@ export class DashboardComponent implements OnInit {
   loadCurrentWeather(lat: number, lng: number) {
     this.webService.getCurrentWeather(lat, lng).subscribe({
       next: (response: any) => {
-        console.log(response)
         this.currentWeather = response.currentWeather;
         this.currentAstro = response.astroData.astronomy;
-
         this.isWeatherLoaded = true;
       },
       error: (error) => console.error('Received invalid weather response:', error),

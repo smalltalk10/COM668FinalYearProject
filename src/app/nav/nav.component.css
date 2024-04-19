@@ -1,2 +1,9 @@
 .error { background-color: #fff0f0; }
+
 .errorText { color: red; }
+
+.navbar {
+    background-color:rgba(20, 100, 20, 1);
+    height: 4.5vh;
+}
+

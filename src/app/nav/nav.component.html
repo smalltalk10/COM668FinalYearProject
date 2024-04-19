@@ -1,4 +1,4 @@
-<div class="navbar navbar-expand-sm navbar-dark fixed-top" style="background-color:rgba(20, 100, 20, 1)">
+<div class="navbar navbar-expand-sm navbar-dark fixed-top">
   <span class="navbar-brand" style="margin-left: 15px;">Agri-Insight Monitoring Project</span>
   <ng-container *ngIf="sessionStorage.getItem('token'); noLinks">
     <ul class="navbar-nav">
@@ -8,9 +8,9 @@
       <li class="nav-item">
         <a class="nav-link" routerLink="/data">Historic Data</a>
       </li>
-      <!-- <li class="nav-item">
+      <li class="nav-item">
       <a class="nav-link" routerLink="/forecast">Forecast</a>
-    </li> -->
+    </li>
     </ul>
   </ng-container>
   <ng-template #noLinks>

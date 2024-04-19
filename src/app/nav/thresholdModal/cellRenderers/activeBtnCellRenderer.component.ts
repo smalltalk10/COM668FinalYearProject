@@ -25,7 +25,7 @@ export class ActiveBtnCellRendererComponent implements ICellRendererAngularComp 
     }
   }
 
-  setAsDisactive(): void {
+  setAsDeactive(): void {
     this.isActive = "false";
     this.cd.detectChanges();
     if (this.params.onClick) {
