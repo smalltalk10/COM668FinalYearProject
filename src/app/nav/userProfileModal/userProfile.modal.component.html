@@ -1,0 +1,42 @@
+<div class="modal-header">
+  <h4 class="modal-title">View Profile</h4>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<form [formGroup]="editForm" (ngSubmit)="onSubmitEditProfile()">
+  <div class="modal-body">
+    <div class="user-info">
+      <p><strong>Username:</strong> {{decodedToken.username}}</p>
+      <p><strong>E-mail:</strong> {{decodedToken.email}}</p>
+    </div>
+    <hr>
+    <div class="form-group">
+      <label for="email">Change E-mail Address</label>
+      <input type="email" id="email" class="form-control" formControlName="email" aria-describedby="emailHelp" />
+      <small class="form-text text-muted">Please enter a valid email address.</small>
+      <div *ngIf="isInvalid('email')" class="invalid-feedback">
+        Please provide a valid email.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="password">Enter Your Password</label>
+      <input type="password" id="password" class="form-control" formControlName="password" />
+      <div *ngIf="isInvalid('password')" class="invalid-feedback">
+        Password is required.
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button mat-raised-button color="warn" (click)="onSubmitDeleteProfile()">
+      Delete Profile
+    </button>
+    <small *ngIf="isIncomplete() || errorMessage" class="form-text"
+           [ngClass]="{'hint-text': !errorMessage, 'errorText': errorMessage}">
+      {{ errorMessage || 'Valid credentials must be entered' }}
+    </small>
+    <button *ngIf="!isIncomplete()" mat-raised-button color="accent" type="submit">
+      Save Changes
+    </button>
+  </div>
+</form>

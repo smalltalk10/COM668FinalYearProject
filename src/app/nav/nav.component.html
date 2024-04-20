@@ -6,10 +6,10 @@
         <a class="nav-link" routerLink="/dashboard">Dashboard</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/data">Historic Data</a>
+        <a class="nav-link" routerLink="/data">Historic Soil Data</a>
       </li>
       <li class="nav-item">
-      <a class="nav-link" routerLink="/forecast">Forecast</a>
+      <a class="nav-link" routerLink="/forecast">Forecasted Weather</a>
     </li>
     </ul>
   </ng-container>
@@ -29,9 +29,13 @@
           <mat-icon>circle_notifications</mat-icon>
           <span>Threshold Notifications</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="onOpenUserProfileModal()">
           <mat-icon>person</mat-icon>
           <span>User Profile</span>
+        </button>
+        <button mat-menu-item (click)="onSubmitLogout()">
+          <mat-icon>logout</mat-icon>
+          <span>Log Out</span>
         </button>
       </mat-menu>
     </ng-container>

@@ -1,8 +1,7 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { WebService } from '../web.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: '',
@@ -100,10 +99,8 @@ export class HomeComponent {
     this.webService.login(this.loginForm.value).subscribe({
       next: (response: any) => {
           sessionStorage.setItem('token', response.token);
-          this.decodedToken = jwtDecode(response.token);
-          sessionStorage.setItem('username', this.decodedToken.username);
-          sessionStorage.setItem('deviceID', this.decodedToken.deviceID);
           this.router.navigateByUrl('/dashboard');
+          this.errorMessage = '';
       },
       error: (error) => {
         console.error('HTTP error:', error);
@@ -115,7 +112,12 @@ export class HomeComponent {
 
   onSubmitUserRegister() {
     this.webService.createUser(this.registerForm.value).subscribe({
-      next: () => {},
+      next: () => {
+        this.registerForm.controls['username'].setValue('');
+        this.registerForm.controls['email'].setValue('');
+        this.registerForm.controls['deviceID'].setValue('');
+        this.registerForm.controls['password'].setValue('');
+      },
       error: (error) => {
         console.error('HTTP error:', error);
         const decodedMessage = error?.error?.message || 'Unknown error';

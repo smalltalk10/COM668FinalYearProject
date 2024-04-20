@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WebService } from '../web.service';
 import { AgChartOptions } from 'ag-charts-community';
+import { Router } from '@angular/router';
 
 interface ForecastDay {
   date: string;
@@ -41,9 +42,15 @@ export class ForecastComponent implements OnInit {
   public precipitationChartOptions: AgChartOptions | null = null;
   deviceID = sessionStorage.getItem('deviceID')
 
-  constructor(private webService: WebService) {}
+  constructor(private webService: WebService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      this.router.navigateByUrl('/');
+    }
     this.loadForecastedWeather();
   }
 

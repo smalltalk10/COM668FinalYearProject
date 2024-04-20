@@ -31,10 +31,15 @@ export class WebService {
       .set('Content-Type', 'application/json');
 
     return this.http.get(
-      'https://prod-13.uksouth.logic.azure.com/workflows/0ea96f9b552947f5aae1f399ba91c283/triggers/manual/paths/invoke/rest/v1/user/session' +
+      'https://prod-13.uksouth.logic.azure.com/workflows/0ea96f9b552947f5aae1f399ba91c283/triggers/manual/paths/invoke/rest/v1/login' +
       '?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=oFKwoT8a-IGsW62ZuAVLNH3gx7DxrCd2Gpnj6t-arEg',
       { headers }
     );
+  }
+
+  logout(token: string) {
+    const headers = new HttpHeaders().set('x-access-token', token);
+    return this.http.get('http://localhost:5000/api/v1.0/logout', { headers });
   }
 
   getHeaders() {
@@ -44,6 +49,25 @@ export class WebService {
     });
   }
 
+  editUser(id: string, editDetails: any) {
+    const headers = this.getHeaders();
+    let postData = new FormData();
+    postData.append('email', editDetails.email);
+    postData.append('password', editDetails.password);
+    return this.http.put(`https://prod-09.uksouth.logic.azure.com/workflows/472ad5cd998d460f8dd06c894a62f5d0/triggers/manual/paths/invoke/rest/v1/user/${id}` + 
+    '?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=GM345AOk8_MiefpdL5CHcJzvTcrrp3lJKtXU61kchNA', postData, {
+      headers,
+    });
+  }
+
+  deleteUser(id: string) {
+    const headers = this.getHeaders();
+    return this.http.delete(`https://prod-31.uksouth.logic.azure.com/workflows/2b16dc1e7a3a4ac5a1f00391f724c2c7/triggers/When_a_HTTP_request_is_received/paths/invoke/rest/v1/user/${id}` + 
+    '?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=xYcIlhygNiX65zM0ooBN3qnPrrFKpdytQZ0DcIjQgGg', {
+      headers,
+    });
+  }
+  
   getCurrentMeasurements() {
     const headers = this.getHeaders();
     return this.http.get(

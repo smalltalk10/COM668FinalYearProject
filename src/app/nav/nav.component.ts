@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { WebService } from '../web.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ThresholdModalComponent } from './thresholdModal/threshold.modal.component';
+import { UserProfileModalComponent } from './userProfileModal/userProfile.modal.component';
 
 @Component({
   selector: 'navigation',
@@ -22,5 +23,17 @@ export class NavComponent {
     this.modalService.open(ThresholdModalComponent, {
       windowClass: 'custom-large-modal',
     });
+  }
+
+  onOpenUserProfileModal() {
+    this.modalService.open(UserProfileModalComponent, { size: 'lg' });
+  }
+
+  onSubmitLogout() {
+    const token = sessionStorage.getItem('token');
+    {
+      this.router.navigateByUrl('/');
+      this.sessionStorage.setItem('token', '');
+    }
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { WebService } from '../web.service';
 import { AgChartOptions, time } from 'ag-charts-community';
 import { ColDef } from 'ag-grid-community';
+import { Router } from '@angular/router';
 
 interface SensorData {
   Body: {
@@ -57,9 +58,13 @@ export class DataComponent implements OnInit {
   phChartOptions: AgChartOptions | null = null;
   npkChartOptions: AgChartOptions | null = null;
 
-  constructor(private webService: WebService) {}
+  constructor(public webService: WebService, private router: Router) {}
 
   ngOnInit() {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      this.router.navigateByUrl('/');
+    }
     this.webService.getAllDateRangeMeasurements().subscribe();
     this.updateChartDataBasedOnRange();
   }

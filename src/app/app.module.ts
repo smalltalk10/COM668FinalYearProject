@@ -29,7 +29,7 @@ import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DataComponent } from './data/data.component'
 import { ForecastComponent } from './forecast/forecast.component'
-
+import { UserProfileModalComponent } from './nav/userProfileModal/userProfile.modal.component';
 import { ThresholdModalComponent } from './nav/thresholdModal/threshold.modal.component';
 import { ActiveBtnCellRendererComponent } from './nav/thresholdModal/cellRenderers/activeBtnCellRenderer.component';
 
@@ -62,7 +62,8 @@ var routes: any = [
     DashboardComponent,
     DataComponent,
     ActiveBtnCellRendererComponent,
-    ForecastComponent
+    ForecastComponent,
+    UserProfileModalComponent
   ],
   imports: [
     BrowserModule,

@@ -3,11 +3,12 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { WebService } from '../../web.service';
 import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { FormBuilder, Validators } from '@angular/forms';
+import { jwtDecode } from 'jwt-decode';
 import { ActiveBtnCellRendererComponent } from './cellRenderers/activeBtnCellRenderer.component';
+import { Router } from '@angular/router';
 
 export interface Threshold {
   id: string;
-  deviceID: string;
   name: string;
   temperatureMin: string;
   temperatureMax: string;
@@ -38,12 +39,11 @@ export interface ApiResponse {
 export class ThresholdModalComponent implements OnInit {
   selectedThreshold: any = {
     name: '',
-    id: '',
-    deviceID: '',
     selectedCondtions: [],
   };
   newThresholdForm: any;
   deviceID = sessionStorage.getItem('deviceID');
+  decodedToken: any;
 
   private gridApi!: GridApi;
   public rowData: Threshold[] = [];
@@ -162,10 +162,17 @@ export class ThresholdModalComponent implements OnInit {
   constructor(
     public activeModal: NgbActiveModal,
     private webService: WebService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      this.decodedToken = jwtDecode(token);
+    } else {
+      this.router.navigateByUrl('/');
+    }
     this.newThresholdForm = this.formBuilder.group({
       name: ['', Validators.required],
     });
@@ -180,8 +187,6 @@ export class ThresholdModalComponent implements OnInit {
         this.rowData = apiResponse.value;
         this.selectedThreshold = {
           name: '',
-          id: '',
-          deviceID: '',
           selectedConditions: [],
         };
         this.newThresholdForm.reset();
@@ -214,14 +219,12 @@ export class ThresholdModalComponent implements OnInit {
       });
       this.selectedThreshold.name = selectedRow.name;
       this.selectedThreshold.id = selectedRow.id;
-      this.selectedThreshold.deviceID = selectedRow.deviceID;
       this.selectedThreshold.selectedConditions = updatedConditions;
       this.newThresholdForm.get('name').setValue(this.selectedThreshold.name);
     } else {
       this.selectedThreshold = {
         name: '',
         id: '',
-        deviceID: '',
         selectedConditions: [],
       };
       this.newThresholdForm.reset();
@@ -251,7 +254,6 @@ export class ThresholdModalComponent implements OnInit {
 
   handleSliderChange(event: any, condition: any): void {
     condition.currentValue = event.value;
-    console.log(event, condition);
   }
 
   onSubmitCreateThreshold() {

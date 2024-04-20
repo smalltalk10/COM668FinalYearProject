@@ -20,8 +20,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <span *ngIf="loginIsIncomplete() || errorMessage" [class.errorText]="errorMessage">{{ errorMessage || 'You
-            must
+          <span *ngIf="loginIsIncomplete() || errorMessage" [class.errorText]="errorMessage">{{ errorMessage || 'You must
             complete all fields' }}</span>
           <button *ngIf="!loginIsIncomplete()" mat-raised-button color="primary" type="submit" class="btn btn-primary">
             Log In

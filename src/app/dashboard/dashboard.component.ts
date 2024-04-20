@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { WebService } from '../web.service';
 import { Observable, interval } from 'rxjs';
 import { switchMap, startWith } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { GaugeSettings } from '../models/constants/guage-settings';
 
 @Component({
@@ -9,7 +10,6 @@ import { GaugeSettings } from '../models/constants/guage-settings';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
-
 export class DashboardComponent implements OnInit {
   currentMeasurements!: Observable<any>;
   initialPosition: any;
@@ -22,9 +22,14 @@ export class DashboardComponent implements OnInit {
   currentPosition: any;
   isLocationLoaded = false;
   isWeatherLoaded = false;
-  deviceID = sessionStorage.getItem('deviceID')
+  deviceID = sessionStorage.getItem('deviceID');
 
-  gaugeSettings: { [key: string]: { thresholds: { [key: string]: any }, markers: { [key: string]: any } } } = GaugeSettings;
+  gaugeSettings: {
+    [key: string]: {
+      thresholds: { [key: string]: any };
+      markers: { [key: string]: any };
+    };
+  } = GaugeSettings;
 
   gauges = [
     { name: 'Temperature', key: 'temperature', unit: '°C', max: 60 },
@@ -33,12 +38,16 @@ export class DashboardComponent implements OnInit {
     { name: 'pH', key: 'ph', unit: 'PH', max: 14 },
     { name: 'Nitrogen', key: 'nitrogen', unit: 'mg/kg', max: 100 },
     { name: 'Phosphorus', key: 'phosphorus', unit: 'mg/kg', max: 300 },
-    { name: 'Potassium', key: 'potassium', unit: 'mg/kg', max: 500 }
+    { name: 'Potassium', key: 'potassium', unit: 'mg/kg', max: 500 },
   ];
 
-  constructor(public webService: WebService) {}
+  constructor(public webService: WebService, private router: Router) {}
 
   ngOnInit() {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      this.router.navigateByUrl('/');
+    }
     this.loadCurrentMeasurements();
     this.loadLocation();
     this.webService.getAllDateRangeMeasurements().subscribe();
@@ -61,8 +70,8 @@ export class DashboardComponent implements OnInit {
   handleLocationResponse(response: any) {
     const latitude = parseFloat(response.lat);
     const longitude = parseFloat(response.lng);
-    sessionStorage.setItem('lat', latitude.toString())
-    sessionStorage.setItem('lng', longitude.toString())
+    sessionStorage.setItem('lat', latitude.toString());
+    sessionStorage.setItem('lng', longitude.toString());
     this.initialPosition = { lat: latitude, lng: longitude };
     if (!isNaN(latitude) && !isNaN(longitude)) {
       this.updateMapLocation(latitude, longitude);
@@ -79,7 +88,9 @@ export class DashboardComponent implements OnInit {
 
   updateCurrentPosition() {
     if (this.markerPosition) {
-      this.currentPosition = `deviceID: ${ sessionStorage.getItem('deviceID')}, Lat: ${this.markerPosition.lat} Lng: ${this.markerPosition.lng}`;
+      this.currentPosition = `deviceID: ${sessionStorage.getItem(
+        'deviceID'
+      )}, Lat: ${this.markerPosition.lat} Lng: ${this.markerPosition.lng}`;
     }
   }
 
@@ -90,7 +101,8 @@ export class DashboardComponent implements OnInit {
         this.currentAstro = response.astroData.astronomy;
         this.isWeatherLoaded = true;
       },
-      error: (error) => console.error('Received invalid weather response:', error),
+      error: (error) =>
+        console.error('Received invalid weather response:', error),
     });
   }
 
