@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { WebService } from '../web.service';
+import { WebService } from '../../web.service';
 import { AgChartOptions, time } from 'ag-charts-community';
 import { ColDef } from 'ag-grid-community';
 import { Router } from '@angular/router';
@@ -102,6 +102,18 @@ export class DataComponent implements OnInit {
   }
 
   calculateStatistics(values: number[]) {
+    if (values.length === 0) {
+      return {
+        average: 'N/A',
+        standardDeviation: 'N/A',
+        median: 'N/A',
+        minValue: 'N/A',
+        maxValue: 'N/A',
+        percentile25: 'N/A',
+        percentile75: 'N/A',
+      };
+    }
+
     values.sort((a, b) => a - b);
     const average = values.reduce((sum, val) => sum + val, 0) / values.length;
     const mid = Math.floor(values.length / 2);
@@ -212,6 +224,7 @@ export class DataComponent implements OnInit {
   ): AgChartOptions {
     return {
       autoSize: true,
+      height: 290,
       data: data,
       series: [
         {
@@ -249,6 +262,7 @@ export class DataComponent implements OnInit {
   ): AgChartOptions {
     return {
       autoSize: true,
+      height: 290,
       data: data,
       series: [
         {

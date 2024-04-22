@@ -1,14 +1,14 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, Validators } from '@angular/forms';
-import { WebService } from '../../web.service';
+import { WebService } from '../../../web.service';
 import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile-modal',
   templateUrl: './userProfile.modal.component.html',
-  styleUrls: ['./../nav.component.css'],
+  styleUrls: ['./userProfile.modal.component.css'],
 })
 export class UserProfileModalComponent {
   constructor(
@@ -75,23 +75,21 @@ export class UserProfileModalComponent {
           this.editForm.controls['email'].setValue('');
           this.editForm.controls['password'].setValue('');
           setTimeout(() => {
-            const updatedToken = sessionStorage.getItem('token');
+            const updatedToken = sessionStorage.getItem('token')!;
             this.cd.detectChanges();
-
-            if (updatedToken) {
-              this.decodedToken = jwtDecode(updatedToken);
-            }
+  
+            // Decode the token and update the decodedToken attribute directly without checking
+            this.decodedToken = jwtDecode(updatedToken);
             this.errorMessage = '';
           }, 1);
         },
         error: (error: any) => {
           console.error('HTTP error:', error);
-          const errorMessage = error?.error?.message || 'Unknown error';
-          this.errorMessage = errorMessage;
+          this.errorMessage = error?.error?.message || 'Unknown error';
         },
       });
   }
-
+  
   onSubmitDeleteProfile() {
     const token = sessionStorage.getItem('token');
     if (token !== null) {

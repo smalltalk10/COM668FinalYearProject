@@ -24,14 +24,15 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 // My Componenets
-import { NavComponent } from './nav/nav.component';
-import { HomeComponent } from './home/home.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { DataComponent } from './data/data.component'
-import { ForecastComponent } from './forecast/forecast.component'
-import { UserProfileModalComponent } from './nav/userProfileModal/userProfile.modal.component';
-import { ThresholdModalComponent } from './nav/thresholdModal/threshold.modal.component';
-import { ActiveBtnCellRendererComponent } from './nav/thresholdModal/cellRenderers/activeBtnCellRenderer.component';
+import { NavComponent } from './component/nav/nav.component';
+import { HomeComponent } from './component/home/home.component';
+import { DashboardComponent } from './component/dashboard/dashboard.component';
+import { DataComponent } from './component/data/data.component'
+import { ForecastComponent } from './component/forecast/forecast.component'
+import { ThresholdModalComponent } from './component/nav/thresholdModal/threshold.modal.component';
+import { ActiveBtnCellRendererComponent } from './component/nav/thresholdModal/cellRenderers/activeBtnCellRenderer.component';
+import { UserProfileModalComponent } from './component/nav/userProfileModal/userProfile.modal.component';
+import { DeviceModalComponent } from './component/nav/deviceModal/device.modal.component'; 
 
 
 var routes: any = [
@@ -63,7 +64,8 @@ var routes: any = [
     DataComponent,
     ActiveBtnCellRendererComponent,
     ForecastComponent,
-    UserProfileModalComponent
+    UserProfileModalComponent,
+    DeviceModalComponent
   ],
   imports: [
     BrowserModule,

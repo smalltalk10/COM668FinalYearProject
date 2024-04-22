@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { WebService } from '../web.service';
+import { WebService } from '../../web.service';
 import { Observable, interval } from 'rxjs';
 import { switchMap, startWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { GaugeSettings } from '../models/constants/guage-settings';
+import { GaugeSettings } from '../../models/constants/guage-settings';
 
 @Component({
   selector: 'dashboard',
@@ -17,8 +17,8 @@ export class DashboardComponent implements OnInit {
   currentAstro: any;
 
   zoom = 12;
-  mapCenter: google.maps.LatLngLiteral = { lat: 0, lng: 0 };
-  markerPosition: google.maps.LatLngLiteral = this.mapCenter;
+  mapCenter: any = { lat: 0, lng: 0 };
+  markerPosition: any = this.mapCenter;
   currentPosition: any;
   isLocationLoaded = false;
   isWeatherLoaded = false;
@@ -106,7 +106,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  onMapClick(event: google.maps.MapMouseEvent) {
+  onMapClick(event: any) {
     if (event.latLng) {
       this.updateMapLocation(event.latLng.lat(), event.latLng.lng());
     }

@@ -71,7 +71,7 @@ mat-tab-group{
   border: 1px solid #ccc;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  height: 28.5vh;
+  height: 27.5vh;
   margin-left: 10px;
   margin-right: 10px;
 }
@@ -82,7 +82,7 @@ mat-tab-group{
 }
 
 .stats-grid {
-  height: 22.5vh;
+  height: 22vh;
   width: 100%; 
   }  
   

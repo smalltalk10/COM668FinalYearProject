@@ -31,15 +31,6 @@
   overflow-x: hidden;
 }
 
-.header-content {
-  padding: 10px 20px;
-  background-color: #3f5068;
-  color: white;
-  margin-bottom: 20px;
-  align-items: center;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
 h2 {
   font-size: x-large;
   font-weight: 300;
@@ -68,13 +59,20 @@ h2 {
   padding: 15px;
 }
 
-.map-container, .weather-container {
+.soil-dashboard-container {
+  margin-bottom: 20px;
+}
+
+.soil-dashboard-body {
   margin-top: 20px;
+}
+
+.map-container, .weather-container {
   width: 47vw;
   float: left;
   margin-right: 2%;
   box-sizing: border-box;
-  height: 700px;
+  height: 51.5vh;
 }
 
 .condition-card{

@@ -1,0 +1,24 @@
+<div class="modal-header">
+    <h1>IoT Device Status</h1>
+</div>
+<div class="modal-body">
+    <div class="device-info">
+        <div class="info-row">
+            <p *ngIf="decodedToken?.deviceID"><strong>Device ID:</strong> {{ decodedToken.deviceID }}</p>
+        </div>
+        <ng-container *ngIf="currentMeasurements | async as measurements">
+            <div class="status-container" *ngFor="let measurement of measurements">
+                <img [src]="getOnlineStatus(measurement?.Body?.datetime) === 'Online' ? './../assets/images/status/online.png' : './../assets/images/status/offline.png'" class="status-icon">
+                <div class="status-details">
+                    <p><strong>Online Status:</strong> 
+                        <span [ngClass]="{'online': getOnlineStatus(measurement?.Body?.datetime) === 'Online', 'offline': getOnlineStatus(measurement?.Body?.datetime) !== 'Online'}">
+                            {{ getOnlineStatus(measurement?.Body?.datetime) }}
+                        </span>
+                    </p>
+                    <p><strong>Last Transmission Retrieved:</strong> {{ getRelativeTime(measurement?.Body?.datetime) }}</p>
+                    <p><strong>Current Location:</strong> {{lat}}, {{lng}}</p>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>

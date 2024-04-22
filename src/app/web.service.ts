@@ -96,8 +96,6 @@ export class WebService {
     return this.http.get(urlCurrent, { params });
   }
 
-
-
   getAllDateRangeMeasurements(): Observable<any> {
     const dateRanges = ['day', 'week', 'month'];
     let currentIndex = 0;
@@ -165,7 +163,6 @@ export class WebService {
   }
 
   createThreshold(thresholdForm: any, conditions: any) {
-
     const headers = this.getHeaders();
     let postData = new FormData();
     postData.append('name', thresholdForm.name);

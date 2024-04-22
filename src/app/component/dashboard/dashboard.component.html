@@ -1,19 +1,17 @@
 <div class="filter-bar">
-    <h2></h2>
     <h1>Current Conditions Dashboard</h1>
-    <h2></h2>
 </div>
 <div class="main-container">
     <ng-container *ngFor="let currentMeasurement of currentMeasurements | async">
         <div class="card soil-dashboard-container">
-            <div class="card-header header-content">
+            <div class="card-header">
                 <h2>Soil Measurements</h2>
                 <span><strong>Last updated:</strong> {{ currentMeasurement.Body.datetime | date: 'medium' }}</span>
             </div>
             <div class="row soil-dashboard-body">
                 <div class="col-md-custom mb-4" *ngFor="let gauge of gauges">
                     <div class="card condition-card ">
-                        <img [src]="'./../assets/images/conditions/' + gauge.key + '.png'" class="image">
+                        <img [src]="'assets/images/conditions/' + gauge.key + '.png'" class="image">
                         <ngx-gauge class="center" [size]="200" type="arch" [thick]="15"
                             [value]="currentMeasurement.Body[gauge.key]" [label]="gauge.name" [append]="gauge.unit"
                             [max]="gauge.max" [thresholds]="gaugeSettings[gauge.key].thresholds"
@@ -32,7 +30,7 @@
                     type="submit" (click)="onSubmitUpdateLocation()">Save New Location</button>
             </div>
             <div class="card-body">
-                <google-map height="600px" width="100%" [center]="mapCenter" [zoom]="zoom"
+                <google-map height="565px" width="100%" [center]="mapCenter" [zoom]="zoom"
                     (mapClick)="onMapClick($event)">
                     <map-marker [position]="markerPosition" [title]="currentPosition"></map-marker>
                 </google-map>
@@ -51,35 +49,35 @@
                     <p>Condition: {{currentWeather.current.condition.text}}</p>
                 </div>
                 <div class="weather-card">
-                    <img src='./../assets/images/weather/thermometer.png'>
+                    <img src='assets/images/weather/thermometer.png'>
                     <p>Temp: {{currentWeather.current.temp_c}}°C</p>
                 </div>
                 <div class="weather-card">
-                    <img src='./../assets/images/weather/dew-point.png'>
+                    <img src='assets/images/weather/dew-point.png'>
                     <p>Humidity: {{currentWeather.current.humidity}}%</p>
                 </div>
                 <div class="weather-card">
-                    <img src='./../assets/images/weather/uv.png'>
+                    <img src='assets/images/weather/uv.png'>
                     <p>UV Index: {{currentWeather.current.uv}}</p>
                 </div>
                 <div class="weather-card">
-                    <img src='./../assets/images/weather/wet.png'>
+                    <img src='assets/images/weather/wet.png'>
                     <p>Precipitation: {{currentWeather.current.precip_mm}} mm</p>
                 </div>
                 <div class="weather-card">
-                    <img src='./../assets/images/weather/wind.png'>
+                    <img src='assets/images/weather/wind.png'>
                     <p>Wind: {{currentWeather.current.wind_mph}} mph ({{currentWeather.current.wind_dir}})</p>
                 </div>
                 <div class="weather-card">
-                    <img src='./../assets/images/weather/pressure.png'>
+                    <img src='assets/images/weather/pressure.png'>
                     <p>Pressure: {{currentWeather.current.pressure_mb}} millibars</p>
                 </div>
                 <div class="weather-card">
-                    <img src='./../assets/images/weather/sunrise.png'>
+                    <img src='assets/images/weather/sunrise.png'>
                     <p>Sunrise: {{currentAstro.astro.sunrise}}</p>
                 </div>
                 <div class="weather-card">
-                    <img src='./../assets/images/weather/sunset.png'>
+                    <img src='assets/images/weather/sunset.png'>
                     <p>Sunset: {{currentAstro.astro.sunset}}</p>
                 </div>
             </div>

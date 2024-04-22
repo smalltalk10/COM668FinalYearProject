@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { WebService } from '../web.service';
+import { WebService } from '../../web.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DeviceModalComponent } from './deviceModal/device.modal.component';
 import { ThresholdModalComponent } from './thresholdModal/threshold.modal.component';
 import { UserProfileModalComponent } from './userProfileModal/userProfile.modal.component';
 
@@ -18,6 +19,11 @@ export class NavComponent {
   ) {}
 
   sessionStorage: Storage = window.sessionStorage;
+
+  onOpenDeviceModal() {
+    this.modalService.open(DeviceModalComponent, { size: 'lg' });
+  }
+
 
   onOpenThresholdModal() {
     this.modalService.open(ThresholdModalComponent, {

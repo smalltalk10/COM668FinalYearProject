@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { WebService } from '../web.service';
+import { WebService } from '../../web.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -117,6 +117,7 @@ export class HomeComponent {
         this.registerForm.controls['email'].setValue('');
         this.registerForm.controls['deviceID'].setValue('');
         this.registerForm.controls['password'].setValue('');
+        this.errorMessage = '';
       },
       error: (error) => {
         console.error('HTTP error:', error);

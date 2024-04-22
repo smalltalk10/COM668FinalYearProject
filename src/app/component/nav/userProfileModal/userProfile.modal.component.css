@@ -1,0 +1,60 @@
+.modal-header {
+    background-color: rgba(31, 158, 35, 1);
+    color: white;
+    border-bottom: 1px solid #3f5068;
+    padding: 15px;
+    text-align: center;
+}
+  
+.modal-header h1 {
+    font-size: 24px;
+    font-weight: 300;
+    margin: 0;
+}
+
+.user-info p {
+    margin: 10px 0;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    display: none;
+}
+
+.form-control.ng-invalid.ng-touched + .invalid-feedback {
+    display: block;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-top: 1px solid #dee2e6;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 0.875rem;
+    flex: 1;
+    text-align: center;
+    margin: 0 1rem;
+}

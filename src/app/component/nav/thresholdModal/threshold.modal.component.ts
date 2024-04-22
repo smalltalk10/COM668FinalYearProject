@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { WebService } from '../../web.service';
+import { WebService } from '../../../web.service';
 import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { FormBuilder, Validators } from '@angular/forms';
 import { jwtDecode } from 'jwt-decode';
@@ -45,7 +45,7 @@ export class ThresholdModalComponent implements OnInit {
   deviceID = sessionStorage.getItem('deviceID');
   decodedToken: any;
 
-  private gridApi!: GridApi;
+  public gridApi!: GridApi;
   public rowData: Threshold[] = [];
   public gridOptions: any = {
     context: {
@@ -161,7 +161,7 @@ export class ThresholdModalComponent implements OnInit {
 
   constructor(
     public activeModal: NgbActiveModal,
-    private webService: WebService,
+    public webService: WebService,
     private formBuilder: FormBuilder,
     private router: Router
   ) {}
@@ -221,14 +221,7 @@ export class ThresholdModalComponent implements OnInit {
       this.selectedThreshold.id = selectedRow.id;
       this.selectedThreshold.selectedConditions = updatedConditions;
       this.newThresholdForm.get('name').setValue(this.selectedThreshold.name);
-    } else {
-      this.selectedThreshold = {
-        name: '',
-        id: '',
-        selectedConditions: [],
-      };
-      this.newThresholdForm.reset();
-    }
+    } 
   }
 
   nameInvalid(): boolean {
@@ -257,16 +250,18 @@ export class ThresholdModalComponent implements OnInit {
   }
 
   onSubmitCreateThreshold() {
-    this.webService
-      .createThreshold(this.newThresholdForm.value, this.conditions)
-      .subscribe({
-        next: () => {
-          this.fetchGrid();
-        },
-        error: (error) => {
-          console.error('HTTP error:', error);
-        },
-      });
+    if (this.newThresholdForm.valid) {
+      this.webService
+        .createThreshold(this.newThresholdForm.value, this.conditions)
+        .subscribe({
+          next: () => {
+            this.fetchGrid();
+          },
+          error: (error) => {
+            console.error('HTTP error:', error);
+          },
+        });
+    }
   }
 
   onSubmitUpdateThreshold() {

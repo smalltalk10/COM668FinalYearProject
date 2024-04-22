@@ -18,21 +18,21 @@ export class ActiveBtnCellRendererComponent implements ICellRendererAngularComp 
   }
 
   setAsActive(): void {
-    this.isActive = "true";
-    this.cd.detectChanges();
-    if (this.params.onClick) {
+    if (this.params && this.params.onClick) {
+      this.isActive = "true";
+      this.cd.detectChanges();
       this.params.onClick(this.params.data.id, true);
     }
   }
-
+  
   setAsDeactive(): void {
-    this.isActive = "false";
-    this.cd.detectChanges();
-    if (this.params.onClick) {
+    if (this.params && this.params.onClick) {
+      this.isActive = "false";
+      this.cd.detectChanges();
       this.params.onClick(this.params.data.id, false);
     }
   }
-
+  
   refresh(params: any): boolean {
     return false;
   }

@@ -21,11 +21,11 @@
         <mat-icon style="color: white;">menu</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item>
+        <button mat-menu-item (click)="onOpenDeviceModal()">
           <mat-icon>sensors</mat-icon>
           <span>IoT Device</span>
         </button>
-        <button mat-menu-item  (click)="onOpenThresholdModal()">
+        <button mat-menu-item (click)="onOpenThresholdModal()">
           <mat-icon>circle_notifications</mat-icon>
           <span>Threshold Notifications</span>
         </button>

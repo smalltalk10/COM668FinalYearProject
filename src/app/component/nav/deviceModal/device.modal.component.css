@@ -1,0 +1,60 @@
+.modal-header {
+    background-color: rgba(31, 158, 35, 1);
+    color: white;
+    border-bottom: 1px solid #3f5068;
+    padding: 15px;
+    text-align: center;
+}
+  
+.modal-header h1 {
+    font-size: 24px;
+    font-weight: 300;
+    margin: 0;
+}
+
+  .modal-body {
+    padding: 20px;
+    font-size: 16px;
+    line-height: 1.5;
+    border-radius: 10px;
+    background-color: #ffffff;
+}
+
+.device-info {
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.info-row, .status-container {
+    margin-bottom: 10px;
+    padding: 10px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.status-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.status-details {
+    flex-grow: 1;
+}
+
+.online, .status-details .online {
+    color: #4CAF50; /* Brighter green for better visibility */
+}
+
+.offline, .status-details .offline {
+    color: #F44336; /* Brighter red for better visibility */
+}
+
+/* Enhancements for better readability */
+p {
+    margin: 5px 0;
+    font-size: 14px;
+}
