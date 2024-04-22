@@ -4,7 +4,7 @@
 /* Quartz Theme Specific CSS */
 @import 'ag-grid-community/styles/ag-theme-quartz.css';
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-image: url('assets/images/background/background.png'); background-position: bottom; background-repeat: repeat-x; }
 
 .reading-block,
 .reading-label {
