@@ -4,46 +4,52 @@
         <mat-tab label="Week"></mat-tab>
         <mat-tab label="Month"></mat-tab>
     </mat-tab-group>
-    <h1>{{this.title}} Soil Measurements</h1>
+    <h1 class="centered-title">{{this.title}} Soil Measurements</h1>
+    <button mat-raised-button color="accent" (click)="exportToCsv()" class="export-button">Export to CSV</button>
 </div>
+
 <div class="main-container">
-    <div class="chart-container">
-        <div class="chart-card">
-            <div class="card-header">Soil Temperature Levels</div>
-            <div class="card-body">
-                <ag-charts-angular *ngIf="temperatureChartOptions"
-                    [options]="temperatureChartOptions"></ag-charts-angular>
+    <div id="content-to-export">
+        <div class="chart-container">
+            <div class="chart-card">
+                <div class="card-header">Soil Temperature Levels (°C)</div>
+                <div class="card-body">
+                    <ag-charts-angular *ngIf="temperatureChartOptions"
+                        [options]="temperatureChartOptions"></ag-charts-angular>
+                </div>
             </div>
-        </div>
-        <div class="chart-card">
-            <div class="card-header">Soil Moisture Levels</div>
-            <div class="card-body">
-                <ag-charts-angular *ngIf="moistureChartOptions" [options]="moistureChartOptions"></ag-charts-angular>
+            <div class="chart-card">
+                <div class="card-header">Soil Moisture Levels (%)</div>
+                <div class="card-body">
+                    <ag-charts-angular *ngIf="moistureChartOptions"
+                        [options]="moistureChartOptions"></ag-charts-angular>
+                </div>
             </div>
-        </div>
-        <div class="chart-card">
-            <div class="card-header">Soil pH Levels</div>
-            <div class="card-body">
-                <ag-charts-angular *ngIf="phChartOptions" [options]="phChartOptions"></ag-charts-angular>
+            <div class="chart-card">
+                <div class="card-header">Soil pH Levels (pH)</div>
+                <div class="card-body">
+                    <ag-charts-angular *ngIf="phChartOptions" [options]="phChartOptions"></ag-charts-angular>
+                </div>
             </div>
-        </div>
-        <div class="chart-card">
-            <div class="card-header">Soil Salinity Levels</div>
-            <div class="card-body">
-                <ag-charts-angular *ngIf="salinityChartOptions" [options]="salinityChartOptions"></ag-charts-angular>
+            <div class="chart-card">
+                <div class="card-header">Soil Salinity Levels (µS/cm)</div>
+                <div class="card-body">
+                    <ag-charts-angular *ngIf="salinityChartOptions"
+                        [options]="salinityChartOptions"></ag-charts-angular>
+                </div>
             </div>
-        </div>
-        <div class="chart-card">
-            <div class="card-header">Soil Nitrogen, Phosphorus and Potassium Levels</div>
-            <div class="card-body">
-                <ag-charts-angular *ngIf="npkChartOptions" [options]="npkChartOptions"></ag-charts-angular>
+            <div class="chart-card">
+                <div class="card-header">Soil Nitrogen, Phosphorus and Potassium Levels (mg/kg)</div>
+                <div class="card-body">
+                    <ag-charts-angular *ngIf="npkChartOptions" [options]="npkChartOptions"></ag-charts-angular>
+                </div>
             </div>
-        </div>
-        <div class="chart-card">
-            <div class="card-header">{{this.title}} Key Statistics</div>
-            <div class="card-body">
-                <ag-grid-angular class="ag-theme-quartz stats-grid" [rowData]="rowData" [columnDefs]="colDefs"
-                    [autoSizeStrategy]="autoSizeStrategy"></ag-grid-angular>
+            <div class="chart-card">
+                <div class="card-header">{{this.title}} Key Statistics</div>
+                <div class="card-body">
+                    <ag-grid-angular class="ag-theme-quartz stats-grid" [rowData]="rowData" [columnDefs]="colDefs"
+                        [autoSizeStrategy]="autoSizeStrategy"></ag-grid-angular>
+                </div>
             </div>
         </div>
     </div>

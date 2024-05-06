@@ -1,28 +1,36 @@
 <div style="padding-top: 150px;">
-  <p class="center">Welcome to the</p>
-  <h1 class="center">Agri-Insight Farm Monitoring Project</h1>
+  <p class="center">Welcome to</p>
+  <h1 class="center">Agri-Insight: Farm Monitoring System</h1>
 </div>
 
 <div class="authenticationFrame">
-  <mat-tab-group>
+  <mat-tab-group #tabGroup>
     <mat-tab label="Login">
       <form [formGroup]="loginForm" (ngSubmit)="onSubmitUserLogin()">
         <div class="modal-body">
           <div class="form-group">
             <label for="name">Enter Username</label>
             <input type="text" id="username" name="username" class="form-control" formControlName="username"
-              [ngClass]="{ error: loginIsInvalid('username') }" />
+              [ngClass]="{ 'is-invalid': isInvalid('username', 'loginForm') }" (input)="updateLoginEmailValidity()" />
+            <div *ngIf="isInvalid('username', 'loginForm')" class="invalid-feedback">
+              Please enter a valid username.
+            </div>
           </div>
           <div class="form-group">
             <label for="name">Enter Password</label>
             <input type="password" id="password" name="password" class="form-control" formControlName="password"
-              [ngClass]="{ error: loginIsInvalid('password') }" />
+              [ngClass]="{ 'is-invalid': isInvalid('password', 'loginForm') }" (input)="updateLoginPasswordValidity()" />
+            <div *ngIf="isInvalid('password', 'loginForm')" class="invalid-feedback">
+              Please provide a valid password.
+            </div>
           </div>
         </div>
         <div class="modal-footer">
-          <span *ngIf="loginIsIncomplete() || errorMessage" [class.errorText]="errorMessage">{{ errorMessage || 'You must
-            complete all fields' }}</span>
-          <button *ngIf="!loginIsIncomplete()" mat-raised-button color="primary" type="submit" class="btn btn-primary">
+          <small *ngIf="isIncomplete('loginForm') || errorMessage" class="form-text"
+            [ngClass]="{'hint-text': !errorMessage, 'errorText': errorMessage}">
+            {{ errorMessage || 'Valid credentials must be entered' }}
+          </small>
+          <button *ngIf="loginEmailIsValid && loginPasswordIsValid" mat-raised-button color="primary" type="submit" class="btn btn-primary">
             Log In
           </button>
         </div>
@@ -34,29 +42,42 @@
           <div class="form-group">
             <label for="name">Create Username</label>
             <input type="text" id="username" name="username" class="form-control" formControlName="username"
-              [ngClass]="{ error: registerIsInvalid('username') }" />
+              [ngClass]="{ 'is-invalid': isInvalid('username', 'registerForm') }" />
+            <div *ngIf="isInvalid('username', 'registerForm')" class="invalid-feedback">
+              Please enter a valid username.
+            </div>
           </div>
           <div class="form-group">
-            <label for="email">Create E-mail Address</label>
+            <label for="email">Input E-mail Address</label>
             <input type="email" id="email" name="email" class="form-control" formControlName="email"
-              [ngClass]="{ error: registerIsInvalid('email') }" (input)="updateEmailValidity()" />
+              [ngClass]="{ 'is-invalid': isInvalid('email', 'registerForm') }" (input)="updateRegisterEmailValidity()" />
+            <div *ngIf="isInvalid('email', 'registerForm')" class="invalid-feedback">
+              Please enter a valid email address.
+            </div>
           </div>
           <div class="form-group">
             <label for="name">Input Your DeviceID</label>
             <input type="text" id="deviceID" name="deviceID" class="form-control" formControlName="deviceID"
-              [ngClass]="{ error: registerIsInvalid('deviceID') }" />
+              [ngClass]="{ 'is-invalid': isInvalid('deviceID', 'registerForm') }" />
+            <div *ngIf="isInvalid('deviceID', 'registerForm')" class="invalid-feedback">
+              Please enter a valid device ID.
+            </div>
           </div>
           <div class="form-group">
             <label for="name">Create Password</label>
             <input type="password" id="password" name="password" class="form-control" formControlName="password"
-              [ngClass]="{ error: registerIsInvalid('password') }" />
+              [ngClass]="{ 'is-invalid': isInvalid('password', 'registerForm') }" (input)="updateRegisterPasswordValidity()" />
+            <div *ngIf="isInvalid('password', 'registerForm')" class="invalid-feedback">
+              Please provide a valid password.
+            </div>
           </div>
         </div>
         <div class="modal-footer">
-          <span *ngIf="registerIsIncomplete() || errorMessage" [class.errorText]="errorMessage">{{ errorMessage ||
-            'You must complete all fields' }}</span>
-          <button *ngIf="!registerIsIncomplete()" mat-raised-button color="primary" type="submit"
-            class="btn btn-primary">
+          <small *ngIf="isIncomplete('registerForm') || errorMessage" class="form-text"
+            [ngClass]="{'hint-text': !errorMessage, 'errorText': errorMessage}">
+            {{ errorMessage || 'Valid credentials must be entered' }}
+          </small>
+          <button *ngIf="registerEmailIsValid && registerPasswordIsValid" mat-raised-button color="primary" type="submit" class="btn btn-primary">
             Create Account
           </button>
         </div>

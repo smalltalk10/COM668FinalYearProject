@@ -73,7 +73,7 @@ describe('DashboardComponent', () => {
   });
 
   it('should verify if positions are the same', () => {
-    component.initialPosition = { lat: 1, lng: 2 };
+    component.mapCoordinates = { lat: 1, lng: 2 };
     component.markerPosition = { lat: 1, lng: 2 };
     expect(component.positionsAreDifferent()).toBeFalsy();
   });
@@ -86,7 +86,7 @@ describe('DashboardComponent', () => {
   it('should handle location response', () => {
     const response = { lat: 1, lng: 2 };
     component.handleLocationResponse(response);
-    expect(component.initialPosition).toEqual({ lat: 1, lng: 2 });
+    expect(component.mapCoordinates).toEqual({ lat: 1, lng: 2 });
   });
 
   it('should update map location', () => {
@@ -120,7 +120,7 @@ describe('DashboardComponent', () => {
   });
 
   it('should check if positions are different', () => {
-    component.initialPosition = { lat: 1, lng: 2 };
+    component.mapCoordinates = { lat: 1, lng: 2 };
     component.markerPosition = { lat: 2, lng: 3 };
     expect(component.positionsAreDifferent()).toBeTruthy();
   });

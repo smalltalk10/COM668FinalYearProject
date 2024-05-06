@@ -24,10 +24,10 @@ export class WebService {
     );
   }
 
-  login(loginDetails: any) {
+  login(loginForm: any) {
     const headers = new HttpHeaders()
-      .set('username', loginDetails.username)
-      .set('password', loginDetails.password)
+      .set('username', loginForm.username)
+      .set('password', loginForm.password)
       .set('Content-Type', 'application/json');
 
     return this.http.get(
@@ -37,8 +37,8 @@ export class WebService {
     );
   }
 
-  logout(token: string) {
-    const headers = new HttpHeaders().set('x-access-token', token);
+  logout() { //put in id
+    const headers = this.getHeaders();
     return this.http.get('http://localhost:5000/api/v1.0/logout', { headers });
   }
 
@@ -49,11 +49,11 @@ export class WebService {
     });
   }
 
-  editUser(id: string, editDetails: any) {
+  updateUser(id: string, editForm: any) {
     const headers = this.getHeaders();
     let postData = new FormData();
-    postData.append('email', editDetails.email);
-    postData.append('password', editDetails.password);
+    postData.append('email', editForm.email);
+    postData.append('password', editForm.password);
     return this.http.put(`https://prod-09.uksouth.logic.azure.com/workflows/472ad5cd998d460f8dd06c894a62f5d0/triggers/manual/paths/invoke/rest/v1/user/${id}` + 
     '?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=GM345AOk8_MiefpdL5CHcJzvTcrrp3lJKtXU61kchNA', postData, {
       headers,
@@ -129,16 +129,16 @@ export class WebService {
     return this.http.get(url, { headers });
   }
 
-  getLocation() {
+  getLocation(id: string) {
     const headers = this.getHeaders();
     return this.http.get(
-      'https://prod-07.uksouth.logic.azure.com/workflows/8c15097cd0a74e5381cf2db5f43d8392/triggers/manual/paths/invoke/rest/v1/location' +
+      'https://prod-07.uksouth.logic.azure.com/workflows/8c15097cd0a74e5381cf2db5f43d8392/triggers/manual/paths/invoke/rest/v1/location/' + id +
       '?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=wVrkl2_PUDs5OrjRedR6vSnRlt61VkogDYRiR20taJ8',
       { headers }
     );
   }
 
-  updateLocation(markerPosition: any) {
+  updateLocation(id: string, markerPosition: any) {
     const headers = this.getHeaders();
 
     let postData = new FormData();
@@ -146,7 +146,7 @@ export class WebService {
     postData.append('lng', markerPosition.lng);
 
     return this.http.put(
-      'https://prod-17.uksouth.logic.azure.com/workflows/eb495a1e82434a3e93cf80609f9b873b/triggers/manual/paths/invoke/rest/v1/location' +
+      'https://prod-17.uksouth.logic.azure.com/workflows/eb495a1e82434a3e93cf80609f9b873b/triggers/manual/paths/invoke/rest/v1/location/'+ id +
       '?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9c2p9N5xmrNbLycFNh5SVMnXXNuS6ELrti8tkiWYaCo',
       postData,
       { headers }
@@ -162,24 +162,24 @@ export class WebService {
     );
   }
 
-  createThreshold(thresholdForm: any, conditions: any) {
+  createThreshold(thresholdForm: any, parameters: any) {
     const headers = this.getHeaders();
     let postData = new FormData();
     postData.append('name', thresholdForm.name);
-    postData.append('temperatureMin', conditions[0].currentLowValue);
-    postData.append('temperatureMax', conditions[0].currentHighValue);
-    postData.append('moistureMin', conditions[1].currentLowValue);
-    postData.append('moistureMax', conditions[1].currentHighValue);
-    postData.append('ecMin', conditions[2].currentLowValue);
-    postData.append('ecMax', conditions[2].currentHighValue);
-    postData.append('phMin', conditions[3].currentLowValue);
-    postData.append('phMax', conditions[3].currentHighValue);
-    postData.append('nitrogenMin', conditions[4].currentLowValue);
-    postData.append('nitrogenMax', conditions[4].currentHighValue);
-    postData.append('phosphorusMin', conditions[5].currentLowValue);
-    postData.append('phosphorusMax', conditions[5].currentHighValue);
-    postData.append('potassiumMin', conditions[6].currentLowValue);
-    postData.append('potassiumMax', conditions[6].currentHighValue);
+    postData.append('temperatureMin', parameters[0].currentLowValue);
+    postData.append('temperatureMax', parameters[0].currentHighValue);
+    postData.append('moistureMin', parameters[1].currentLowValue);
+    postData.append('moistureMax', parameters[1].currentHighValue);
+    postData.append('ecMin', parameters[2].currentLowValue);
+    postData.append('ecMax', parameters[2].currentHighValue);
+    postData.append('phMin', parameters[3].currentLowValue);
+    postData.append('phMax', parameters[3].currentHighValue);
+    postData.append('nitrogenMin', parameters[4].currentLowValue);
+    postData.append('nitrogenMax', parameters[4].currentHighValue);
+    postData.append('phosphorusMin', parameters[5].currentLowValue);
+    postData.append('phosphorusMax', parameters[5].currentHighValue);
+    postData.append('potassiumMin', parameters[6].currentLowValue);
+    postData.append('potassiumMax', parameters[6].currentHighValue);
     postData.append('isActive', 'false');
 
 
@@ -191,24 +191,24 @@ export class WebService {
     );
   }
 
-  updateThreshold(id: string, thresholdForm: any, conditions: any) {
+  updateThreshold(id: string, thresholdForm: any, parameters: any) {
     const headers = this.getHeaders();
     let postData = new FormData();
     postData.append('name', thresholdForm.name);
-    postData.append('temperatureMin', conditions[0].currentLowValue);
-    postData.append('temperatureMax', conditions[0].currentHighValue);
-    postData.append('moistureMin', conditions[1].currentLowValue);
-    postData.append('moistureMax', conditions[1].currentHighValue);
-    postData.append('ecMin', conditions[2].currentLowValue);
-    postData.append('ecMax', conditions[2].currentHighValue);
-    postData.append('phMin', conditions[3].currentLowValue);
-    postData.append('phMax', conditions[3].currentHighValue);
-    postData.append('nitrogenMin', conditions[4].currentLowValue);
-    postData.append('nitrogenMax', conditions[4].currentHighValue);
-    postData.append('phosphorusMin', conditions[5].currentLowValue);
-    postData.append('phosphorusMax', conditions[5].currentHighValue);
-    postData.append('potassiumMin', conditions[6].currentLowValue);
-    postData.append('potassiumMax', conditions[6].currentHighValue);
+    postData.append('temperatureMin', parameters[0].currentLowValue);
+    postData.append('temperatureMax', parameters[0].currentHighValue);
+    postData.append('moistureMin', parameters[1].currentLowValue);
+    postData.append('moistureMax', parameters[1].currentHighValue);
+    postData.append('ecMin', parameters[2].currentLowValue);
+    postData.append('ecMax', parameters[2].currentHighValue);
+    postData.append('phMin', parameters[3].currentLowValue);
+    postData.append('phMax', parameters[3].currentHighValue);
+    postData.append('nitrogenMin', parameters[4].currentLowValue);
+    postData.append('nitrogenMax', parameters[4].currentHighValue);
+    postData.append('phosphorusMin', parameters[5].currentLowValue);
+    postData.append('phosphorusMax', parameters[5].currentHighValue);
+    postData.append('potassiumMin', parameters[6].currentLowValue);
+    postData.append('potassiumMax', parameters[6].currentHighValue);
     postData.append('isActive', 'false');
 
     return this.http.put(

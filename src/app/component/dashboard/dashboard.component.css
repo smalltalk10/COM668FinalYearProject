@@ -15,7 +15,7 @@
 .filter-bar h1 {
   color: white;
   font-size: 30px;
-  font-weight: 300;
+  font-weight: 350;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -33,7 +33,7 @@
 
 h2 {
   font-size: x-large;
-  font-weight: 300;
+  font-weight: 350;
 }
 
 .card {

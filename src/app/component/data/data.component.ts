@@ -17,7 +17,7 @@ interface SensorData {
   };
 }
 
-interface Statistics {
+interface StatisticsData {
   moisture: number[];
   temperature: number[];
   ec: number[];
@@ -39,11 +39,11 @@ export class DataComponent implements OnInit {
   rowData: any[] = [];
   colDefs: ColDef[] = [
     { field: 'condition' },
+    { field: 'minValue' },
+    { field: 'maxValue' },
     { field: 'average' },
     { field: 'median' },
     { field: 'standardDeviation' },
-    { field: 'minValue' },
-    { field: 'maxValue' },
     { field: 'percentile25' },
     { field: 'percentile75' },
   ];
@@ -75,8 +75,8 @@ export class DataComponent implements OnInit {
     this.updateChartDataBasedOnRange();
   }
 
-  processDataForGrid(data: SensorData[]) {
-    const statistics: Statistics = {
+  createGridOptions(data: SensorData[]) {
+    const statistics: StatisticsData = {
       moisture: [],
       temperature: [],
       ec: [],
@@ -97,7 +97,7 @@ export class DataComponent implements OnInit {
 
     return Object.keys(statistics).map((key) => ({
       condition: key,
-      ...this.calculateStatistics(statistics[key as keyof Statistics]),
+      ...this.calculateStatistics(statistics[key as keyof StatisticsData]),
     }));
   }
 
@@ -158,7 +158,7 @@ export class DataComponent implements OnInit {
         break;
     }
     this.updateChartData(data);
-    this.rowData = this.processDataForGrid(data);
+    this.rowData = this.createGridOptions(data);
   }
 
   private getTickInterval() {
@@ -307,5 +307,8 @@ export class DataComponent implements OnInit {
       ],
       legend: { enabled: true, position: 'top' },
     };
+  }
+
+  exportToCsv() {
   }
 }

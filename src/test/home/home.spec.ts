@@ -61,17 +61,8 @@ describe('HomeComponent', () => {
   
     component.loginForm.controls['username'].markAsTouched();
     component.loginForm.controls['password'].markAsTouched();
-    expect(component.loginIsInvalid('username')).toBe(true);
-    expect(component.loginIsInvalid('password')).toBe(true);
-  });
-
-  it('should check if login form is untouched', () => {
-    component.loginForm = formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-    });
-
-    expect(component.loginIsUntouched()).toBe(true);
+    expect(component.isInvalid('username', 'loginForm')).toBe(true);
+    expect(component.isInvalid('password', 'loginForm')).toBe(true);
   });
 
   it('should check if login form is incomplete', () => {
@@ -81,7 +72,7 @@ describe('HomeComponent', () => {
     });
 
     component.loginForm.controls['username'].markAsTouched();
-    expect(component.loginIsIncomplete()).toBe(true);
+    expect(component.isIncomplete('loginForm')).toBe(true);
   });
 
   it('should update email validity', () => {
@@ -93,8 +84,8 @@ describe('HomeComponent', () => {
     });
 
     component.registerForm.controls['email'].setValue('test@example.com');
-    component.updateEmailValidity();
-    expect(component.emailIsValid).toBe(true);
+    component.updateRegisterEmailValidity();
+    expect(component.registerEmailIsValid).toBe(true);
   });
 
   it('should check if register form controls are invalid', () => {
@@ -106,19 +97,9 @@ describe('HomeComponent', () => {
     });
 
     component.registerForm.controls['email'].markAsTouched();
-    expect(component.registerIsInvalid('email')).toBe(true);
+    expect(component.isInvalid('email', 'registerForm')).toBe(true);
   });
 
-  it('should check if register form is untouched', () => {
-    component.registerForm = formBuilder.group({
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-      deviceID: ['', Validators.required],
-    });
-
-    expect(component.registerIsUntouched()).toBe(true);
-  });
 
   it('should check if register form is incomplete', () => {
     component.registerForm = formBuilder.group({
@@ -129,7 +110,7 @@ describe('HomeComponent', () => {
     });
 
     component.registerForm.controls['username'].markAsTouched();
-    expect(component.registerIsIncomplete()).toBe(true);
+    expect(component.isIncomplete('registerForm')).toBe(true);
   });
 
   it('should submit user login', () => {
@@ -179,7 +160,7 @@ describe('HomeComponent', () => {
     jest.spyOn(webServiceMock, 'createUser').mockReturnValue(of(response));
   
     component.registerForm = formBuilder.group(registerFormValue);
-    component.emailIsValid = true;
+    component.registerEmailIsValid = true;
     component.onSubmitUserRegister();
   
     // Modify the expectation to target the spy function
@@ -199,7 +180,6 @@ describe('HomeComponent', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
 
     component.registerForm = formBuilder.group(registerFormValue);
-    component.emailIsValid = true;
     component.onSubmitUserRegister();
 
     expect(consoleErrorSpy).toHaveBeenCalledWith('HTTP error:', error);

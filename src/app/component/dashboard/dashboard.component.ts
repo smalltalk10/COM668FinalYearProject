@@ -3,6 +3,7 @@ import { WebService } from '../../web.service';
 import { Observable, interval } from 'rxjs';
 import { switchMap, startWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 import { GaugeSettings } from '../../models/constants/guage-settings';
 
 @Component({
@@ -12,9 +13,11 @@ import { GaugeSettings } from '../../models/constants/guage-settings';
 })
 export class DashboardComponent implements OnInit {
   currentMeasurements!: Observable<any>;
-  initialPosition: any;
+  mapCoordinates: {lat: number, lng: number } = {lat: 0, lng: 0};
   currentWeather: any;
   currentAstro: any;
+  decodedToken: any = '';
+  deviceID: string = 'N/A';
 
   zoom = 12;
   mapCenter: any = { lat: 0, lng: 0 };
@@ -22,7 +25,6 @@ export class DashboardComponent implements OnInit {
   currentPosition: any;
   isLocationLoaded = false;
   isWeatherLoaded = false;
-  deviceID = sessionStorage.getItem('deviceID');
 
   gaugeSettings: {
     [key: string]: {
@@ -45,7 +47,9 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     const token = sessionStorage.getItem('token');
-    if (!token) {
+    if (token) {
+      this.decodedToken = jwtDecode(token);
+    } else {
       this.router.navigateByUrl('/');
     }
     this.loadCurrentMeasurements();
@@ -61,7 +65,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadLocation() {
-    this.webService.getLocation().subscribe({
+    this.webService.getLocation(this.decodedToken.deviceID).subscribe({
       next: (response: any) => this.handleLocationResponse(response),
       error: (error) => console.error('Received invalid coordinates:', error),
     });
@@ -72,7 +76,8 @@ export class DashboardComponent implements OnInit {
     const longitude = parseFloat(response.lng);
     sessionStorage.setItem('lat', latitude.toString());
     sessionStorage.setItem('lng', longitude.toString());
-    this.initialPosition = { lat: latitude, lng: longitude };
+    this.deviceID = this.decodedToken.deviceID
+    this.mapCoordinates = { lat: latitude, lng: longitude };
     if (!isNaN(latitude) && !isNaN(longitude)) {
       this.updateMapLocation(latitude, longitude);
       this.loadCurrentWeather(latitude, longitude);
@@ -88,9 +93,7 @@ export class DashboardComponent implements OnInit {
 
   updateCurrentPosition() {
     if (this.markerPosition) {
-      this.currentPosition = `deviceID: ${sessionStorage.getItem(
-        'deviceID'
-      )}, Lat: ${this.markerPosition.lat} Lng: ${this.markerPosition.lng}`;
+      this.currentPosition = `deviceID: ${this.deviceID}, Lat: ${this.markerPosition.lat} Lng: ${this.markerPosition.lng}`;
     }
   }
 
@@ -113,15 +116,15 @@ export class DashboardComponent implements OnInit {
   }
 
   positionsAreDifferent(): boolean {
-    if (!this.initialPosition) return false;
+    if (!this.mapCoordinates) return false;
     return (
-      this.initialPosition.lat !== this.markerPosition.lat ||
-      this.initialPosition.lng !== this.markerPosition.lng
+      this.mapCoordinates.lat !== this.markerPosition.lat ||
+      this.mapCoordinates.lng !== this.markerPosition.lng
     );
   }
 
   onSubmitUpdateLocation() {
-    this.webService.updateLocation(this.markerPosition).subscribe({
+    this.webService.updateLocation(this.deviceID, this.markerPosition).subscribe({
       next: () => this.loadLocation(),
       error: (error) => console.error('HTTP error:', error),
     });

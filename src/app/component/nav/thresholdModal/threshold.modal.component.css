@@ -4,12 +4,11 @@
   }
 
 .threshold-grid {
-  height: 25vh;
+  height: 18vh;
   width: 100%; 
   }  
   
 .edit-threshold-container {
-  height: 45vh;
   background-color: rgba(31, 158, 35, 0.1);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, .3);
@@ -32,7 +31,7 @@
 
 .modal-header h1 {
   font-size: 24px;
-  font-weight: 300;
+  font-weight: 350;
   margin: 0;
 }
 
@@ -117,5 +116,5 @@ button {
 }
 
 .no-pointer {
-  pointer-events: none; /* Disables mouse interactions */
+  pointer-events: none;
 }

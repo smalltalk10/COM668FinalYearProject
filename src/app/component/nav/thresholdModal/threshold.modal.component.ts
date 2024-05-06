@@ -6,28 +6,29 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { jwtDecode } from 'jwt-decode';
 import { ActiveBtnCellRendererComponent } from './cellRenderers/activeBtnCellRenderer.component';
 import { Router } from '@angular/router';
+import { DefaultThresholds, conditionsMapping } from '../../../models/constants/default-thresholds';
 
 export interface Threshold {
   id: string;
   name: string;
-  temperatureMin: string;
-  temperatureMax: string;
-  moistureMin: string;
-  moistureMax: string;
-  ecMin: string;
-  ecMax: string;
-  phMin: string;
-  phMax: string;
-  nitrogenMin: string;
-  nitrogenMax: string;
-  phosphorusMin: string;
-  phosphorusMax: string;
-  potassiumMin: string;
-  potassiumMax: string;
+  temperatureMin: number;
+  temperatureMax: number;
+  moistureMin: number;
+  moistureMax: number;
+  ecMin: number;
+  ecMax: number;
+  phMin: number;
+  phMax: number;
+  nitrogenMin: number;
+  nitrogenMax: number;
+  phosphorusMin: number;
+  phosphorusMax: number;
+  potassiumMin: number;
+  potassiumMax: number;
   isActive?: string;
 }
 
-export interface ApiResponse {
+export interface ThresholdData {
   value: Threshold[];
 }
 
@@ -39,95 +40,22 @@ export interface ApiResponse {
 export class ThresholdModalComponent implements OnInit {
   selectedThreshold: any = {
     name: '',
-    selectedCondtions: [],
+    selectedParameters: [],
   };
-  newThresholdForm: any;
-  deviceID = sessionStorage.getItem('deviceID');
+  thresholdForm: any;
   decodedToken: any;
+  thresholdParameters = DefaultThresholds.thresholds;
+  conditionsMapping = conditionsMapping;
 
-  public gridApi!: GridApi;
-  public rowData: Threshold[] = [];
-  public gridOptions: any = {
+  gridApi!: GridApi;
+  rowData: Threshold[] = [];
+  gridOptions: any = {
     context: {
       componentParent: this
     }
   };
-
-  conditions = [
-    {
-      name: 'Temperature (°C)',
-      minValue: -20,
-      maxValue: 60,
-      currentLowValue: -20,
-      currentHighValue: 60,
-    },
-    {
-      name: 'Moisture (%)',
-      minValue: 0,
-      maxValue: 100,
-      currentLowValue: 0,
-      currentHighValue: 100,
-    },
-    {
-      name: 'Salinity (µS/cm)',
-      minValue: 0,
-      maxValue: 1200,
-      currentLowValue: 0,
-      currentHighValue: 1200,
-    },
-    {
-      name: 'pH',
-      minValue: 0,
-      maxValue: 14,
-      currentLowValue: 0,
-      currentHighValue: 14,
-    },
-    {
-      name: 'Nitrogen (mg/kg)',
-      minValue: 0,
-      maxValue: 200,
-      currentLowValue: 0,
-      currentHighValue: 200,
-    },
-    {
-      name: 'Phosphorus (mg/kg)',
-      minValue: 0,
-      maxValue: 250,
-      currentLowValue: 0,
-      currentHighValue: 250,
-    },
-    {
-      name: 'Potassium (mg/kg)',
-      minValue: 0,
-      maxValue: 500,
-      currentLowValue: 0,
-      currentHighValue: 500,
-    },
-  ];
-
-  conditionsMapping = [
-    {
-      name: 'Temperature (°C)',
-      minKey: 'temperatureMin',
-      maxKey: 'temperatureMax',
-    },
-    { name: 'Moisture (%)', minKey: 'moistureMin', maxKey: 'moistureMax' },
-    { name: 'Salinity (µS/cm)', minKey: 'ecMin', maxKey: 'ecMax' },
-    { name: 'pH', minKey: 'phMin', maxKey: 'phMax' },
-    { name: 'Nitrogen (mg/kg)', minKey: 'nitrogenMin', maxKey: 'nitrogenMax' },
-    {
-      name: 'Phosphorus (mg/kg)',
-      minKey: 'phosphorusMin',
-      maxKey: 'phosphorusMax',
-    },
-    {
-      name: 'Potassium (mg/kg)',
-      minKey: 'potassiumMin',
-      maxKey: 'potassiumMax',
-    },
-  ];
-
-  public colDefs: ColDef[] = [
+  
+  colDefs: ColDef[] = [
     { field: 'name', headerName: 'Alert Name' },
     { field: 'temperatureMin', headerName: 'Temp Min' },
     { field: 'temperatureMax', headerName: 'Temp Max' },
@@ -173,7 +101,7 @@ export class ThresholdModalComponent implements OnInit {
     } else {
       this.router.navigateByUrl('/');
     }
-    this.newThresholdForm = this.formBuilder.group({
+    this.thresholdForm = this.formBuilder.group({
       name: ['', Validators.required],
     });
     this.fetchGrid();
@@ -183,13 +111,13 @@ export class ThresholdModalComponent implements OnInit {
   fetchGrid() {
     this.webService.getAllThresholds().subscribe({
       next: (response: any) => {
-        const apiResponse = response as ApiResponse;
-        this.rowData = apiResponse.value;
+        const thresholdData = response as ThresholdData;
+        this.rowData = thresholdData.value;
         this.selectedThreshold = {
           name: '',
           selectedConditions: [],
         };
-        this.newThresholdForm.reset();
+        this.thresholdForm.reset();
       },
       error: (error) => {
         console.error('Error fetching data:', error);
@@ -207,7 +135,7 @@ export class ThresholdModalComponent implements OnInit {
     var selectedRow = this.gridApi.getSelectedRows()[0];
 
     if (selectedRow !== undefined) {
-      const updatedConditions = this.conditions.map((condition: any) => {
+      const updatedConditions = this.thresholdParameters.map((condition: any) => {
         const mapping: any = this.conditionsMapping.find(
           (m) => m.name === condition.name
         );
@@ -220,14 +148,19 @@ export class ThresholdModalComponent implements OnInit {
       this.selectedThreshold.name = selectedRow.name;
       this.selectedThreshold.id = selectedRow.id;
       this.selectedThreshold.selectedConditions = updatedConditions;
-      this.newThresholdForm.get('name').setValue(this.selectedThreshold.name);
-    } 
+      this.thresholdForm.get('name').setValue(this.selectedThreshold.name);
+    } else {
+      this.selectedThreshold = {
+        selectedParameters: [],
+      };
+      this.thresholdForm.get('name').setValue('');
+    }
   }
 
   nameInvalid(): boolean {
-    const control = this.newThresholdForm.get('name');
+    const control = this.thresholdForm.get('name');
     return (
-      control.invalid && (control.dirty || this.newThresholdForm.untouched)
+      control.invalid && (control.dirty || this.thresholdForm.untouched)
     );
   }
 
@@ -250,9 +183,9 @@ export class ThresholdModalComponent implements OnInit {
   }
 
   onSubmitCreateThreshold() {
-    if (this.newThresholdForm.valid) {
+    if (this.thresholdForm.valid) {
       this.webService
-        .createThreshold(this.newThresholdForm.value, this.conditions)
+        .createThreshold(this.thresholdForm.value, this.thresholdParameters)
         .subscribe({
           next: () => {
             this.fetchGrid();
@@ -268,7 +201,7 @@ export class ThresholdModalComponent implements OnInit {
     this.webService
       .updateThreshold(
         this.selectedThreshold.id,
-        this.newThresholdForm.value,
+        this.thresholdForm.value,
         this.selectedThreshold.selectedConditions
       )
       .subscribe({

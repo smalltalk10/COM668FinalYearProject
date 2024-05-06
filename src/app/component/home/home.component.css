@@ -18,13 +18,17 @@
 
 .center {
     text-align: center;
+    font-weight: 350;
 }
 
 h1 {
-    font-size: 36px;             /* Suitable font size for mobile and desktop */
-    color: #333;                 /* Dark color for better readability */
+    color: rgba(20, 100, 20, 1);
+    font-size: 60px;             /* Suitable font size for mobile and desktop */
     padding-bottom: 10px;        /* Space below the header */
+    font-weight: 350;
 }
+
+p { font-size: 40px; }
 
 .authenticationFrame .btn-primary {
     width: 100%;                 /* Makes the button stretch to fill the container */

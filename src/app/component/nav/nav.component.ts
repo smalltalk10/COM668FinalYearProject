@@ -36,7 +36,6 @@ export class NavComponent {
   }
 
   onSubmitLogout() {
-    const token = sessionStorage.getItem('token');
     {
       this.router.navigateByUrl('/');
       this.sessionStorage.setItem('token', '');

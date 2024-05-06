@@ -72,7 +72,7 @@ describe('DataComponent', () => {
 
   it('should process and format grid data correctly', () => {
     const sampleData = [{ Body: { datetime: '2021-01-01', moisture: 10, temperature: 25, ec: 1, ph: 7, nitrogen: 3, phosphorus: 4, potassium: 5 } }];
-    const gridData = component.processDataForGrid(sampleData);
+    const gridData = component.createGridOptions(sampleData);
     expect(gridData.length).toBeGreaterThan(0);
     expect(gridData[0]).toHaveProperty('average');
     expect(gridData[0]).toHaveProperty('median');

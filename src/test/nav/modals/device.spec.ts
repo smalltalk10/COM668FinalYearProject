@@ -37,7 +37,7 @@ describe('DeviceModalComponent', () => {
     });
 
     webServiceMock = {
-      editUser: jest.fn(),
+      updateUser: jest.fn(),
       deleteUser: jest.fn(),
       getCurrentMeasurements: jest.fn(() => of({ temp: 20, humidity: 50 })),
     };

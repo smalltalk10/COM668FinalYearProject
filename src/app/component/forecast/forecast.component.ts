@@ -37,10 +37,10 @@ interface WeatherForecast {
   styleUrls: ['./forecast.component.css'],
 })
 export class ForecastComponent implements OnInit {
-  forecastedWeather!: WeatherForecast;
-  public temperatureChartOptions: AgChartOptions | null = null;
-  public precipitationChartOptions: AgChartOptions | null = null;
   deviceID = sessionStorage.getItem('deviceID')
+  forecastedWeather!: WeatherForecast;
+  temperatureChartOptions: AgChartOptions | null = null;
+  precipitationChartOptions: AgChartOptions | null = null;
 
   constructor(private webService: WebService,
     private router: Router
@@ -69,15 +69,15 @@ export class ForecastComponent implements OnInit {
     this.webService.getForecastedWeather(lat, lng).subscribe({
       next: (response: any) => {
         this.forecastedWeather = response as WeatherForecast;
-        this.setupTemperatureChart();
-        this.setupPrecipitationChart();
+        this.createTemperatureChartOptions();
+        this.createRainfallChartOptions();
       },
       error: (error: any) =>
         console.error('Received invalid weather response:', error),
     });
   }
 
-  setupTemperatureChart() {
+  private createTemperatureChartOptions() {
     const categories = this.forecastedWeather.forecast.forecastday.map(
       (day) => day.date
     );
@@ -139,7 +139,7 @@ export class ForecastComponent implements OnInit {
     };
   }
   
-  setupPrecipitationChart() {
+  private createRainfallChartOptions() {
     const categories = this.forecastedWeather.forecast.forecastday.map(
       (day) => day.date
     );

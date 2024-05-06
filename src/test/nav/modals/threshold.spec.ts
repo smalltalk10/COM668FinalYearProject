@@ -77,14 +77,14 @@ describe('ThresholdModalComponent', () => {
   });
 
   it('should handle form submission and API call', () => {
-    component.newThresholdForm.controls['name'].setValue('New Threshold');
+    component.thresholdForm.controls['name'].setValue('New Threshold');
     component.onSubmitCreateThreshold();
     expect(webServiceMock.createThreshold).toHaveBeenCalled();
   });
 
   it('should update threshold on form submit', () => {
     component.selectedThreshold.id = '123';
-    component.newThresholdForm.controls['name'].setValue('Updated Threshold');
+    component.thresholdForm.controls['name'].setValue('Updated Threshold');
     component.onSubmitUpdateThreshold();
     expect(webServiceMock.updateThreshold).toHaveBeenCalledWith(
       '123',
@@ -147,7 +147,7 @@ describe('ThresholdModalComponent', () => {
   });
 
   it('should not submit create threshold with invalid form input', () => {
-    component.newThresholdForm.controls['name'].setValue('');
+    component.thresholdForm.controls['name'].setValue('');
   
     const createThresholdSpy = jest.spyOn(component.webService, 'createThreshold');
   
@@ -184,16 +184,16 @@ describe('ThresholdModalComponent', () => {
 
     component.onSelectionChanged({});
 
-    expect(component.newThresholdForm.controls['name'].value).toBe('Threshold 1');
+    expect(component.thresholdForm.controls['name'].value).toBe('Threshold 1');
   });
 
   it('should mark the form as invalid when name is empty', () => {
-    component.newThresholdForm.controls['name'].setValue('');
+    component.thresholdForm.controls['name'].setValue('');
     expect(component.nameInvalid()).toBe(true);
   });
 
   it('should mark the form as valid when name is not empty', () => {
-    component.newThresholdForm.controls['name'].setValue('Valid Name');
+    component.thresholdForm.controls['name'].setValue('Valid Name');
     expect(component.nameInvalid()).toBe(false);
   });
 
@@ -236,7 +236,7 @@ describe('ThresholdModalComponent', () => {
   });
 
   it('should handle form submission error', () => {
-    component.newThresholdForm.controls['name'].setValue('New Threshold');
+    component.thresholdForm.controls['name'].setValue('New Threshold');
   
     webServiceMock.createThreshold.mockReturnValue(throwError('API error'));
   
@@ -247,7 +247,7 @@ describe('ThresholdModalComponent', () => {
   
   it('should handle update threshold error', () => {
     component.selectedThreshold.id = '123';
-    component.newThresholdForm.controls['name'].setValue('Updated Threshold');
+    component.thresholdForm.controls['name'].setValue('Updated Threshold');
   
     webServiceMock.updateThreshold.mockReturnValue(throwError('API error'));
   

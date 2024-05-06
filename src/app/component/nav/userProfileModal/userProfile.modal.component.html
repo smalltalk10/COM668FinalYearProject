@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h1>View Profile</h1>
+  <h1>User Profile</h1>
 </div>
 <form [formGroup]="editForm" (ngSubmit)="onSubmitEditProfile()">
   <div class="modal-body">
@@ -9,31 +9,32 @@
     </div>
     <hr>
     <div class="form-group">
-      <label for="email">Change E-mail Address</label>
-      <input type="email" id="email" class="form-control" formControlName="email" aria-describedby="emailHelp" />
-      <small class="form-text text-muted">Please enter a valid email address.</small>
+      <label for="email">Input E-mail Address</label>
+      <input type="email" id="email" name="email" class="form-control" formControlName="email"
+       (input)="updateEmailValidity()" [ngClass]="{ 'is-invalid': isInvalid('email') }"/>
       <div *ngIf="isInvalid('email')" class="invalid-feedback">
-        Please provide a valid email.
+        Please enter a valid email address to update.
       </div>
     </div>
     <div class="form-group">
-      <label for="password">Enter Your Password</label>
-      <input type="password" id="password" class="form-control" formControlName="password" />
+      <label for="password">Enter Password to Update or Delete Profile</label>
+      <input type="password" id="password" class="form-control" formControlName="password"
+        (input)="updatePasswordValidity()" [ngClass]="{ 'is-invalid': isInvalid('password') }" />
       <div *ngIf="isInvalid('password')" class="invalid-feedback">
-        Password is required.
+        Please provide your password.
       </div>
     </div>
   </div>
   <div class="modal-footer">
-    <button mat-raised-button color="warn" (click)="onSubmitDeleteProfile()">
-      Delete Profile
+    <button mat-raised-button color="accent" type="submit" [disabled]="editForm.invalid">
+      Update Details
     </button>
     <small *ngIf="isIncomplete() || errorMessage" class="form-text"
-           [ngClass]="{'hint-text': !errorMessage, 'errorText': errorMessage}">
-      {{ errorMessage || 'Valid credentials must be entered' }}
+      [ngClass]="{'hint-text': !errorMessage, 'error-message': errorMessage}">
+      {{ errorMessage || 'Valid password must be entered to update or delete profile' }}
     </small>
-    <button *ngIf="!isIncomplete()" mat-raised-button color="accent" type="submit">
-      Save Changes
+    <button mat-raised-button color="warn" type="button" (click)="onSubmitDeleteProfile()" [disabled]="!passwordIsValid">
+      Delete Profile
     </button>
   </div>
 </form>

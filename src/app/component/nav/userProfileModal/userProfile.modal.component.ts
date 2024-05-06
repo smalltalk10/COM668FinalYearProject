@@ -23,8 +23,16 @@ export class UserProfileModalComponent {
   decodedToken: any;
   errorMessage: string = '';
   emailIsValid: boolean = false;
+  passwordIsValid: boolean = false;
 
   ngOnInit() {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      this.decodedToken = jwtDecode(token);
+    } else {
+      this.router.navigateByUrl('/');
+    }
+
     this.editForm = this.formBuilder.group({
       email: [
         '',
@@ -34,15 +42,15 @@ export class UserProfileModalComponent {
           Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}'),
         ],
       ],
-      password: ['', Validators.required],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern('^(?=.*[0-9])(?=.*[!@#$%^&*-])[a-zA-Z0-9!@#$%^&*-]+$'),
+        ],
+      ],
     });
-
-    const token = sessionStorage.getItem('token');
-    if (token) {
-      this.decodedToken = jwtDecode(token);
-    } else {
-      this.router.navigateByUrl('/');
-    }
   }
 
   closeModal() {
@@ -53,46 +61,40 @@ export class UserProfileModalComponent {
     this.emailIsValid = this.editForm.controls.email.valid;
   }
 
+  updatePasswordValidity() {
+    this.passwordIsValid = this.editForm.controls.password.valid;
+  }
+
   isInvalid(controlName: string): boolean {
     const control = this.editForm.get(controlName);
-    return control && control.invalid && (control.dirty || control.touched);
+    return control.touched && control.invalid;
   }
 
   isIncomplete(): boolean {
     return this.editForm.invalid || this.editForm.pristine;
   }
 
-  isUntouched() {
-    return this.editForm.controls.email.pristine;
+  onSubmitEditProfile() {
+    this.webService.updateUser(this.decodedToken.userID, this.editForm.value).subscribe({
+      next: (response: any) => {
+        sessionStorage.setItem('token', response.token);
+        this.editForm.reset();
+        setTimeout(() => {
+          const updatedToken = sessionStorage.getItem('token')!;
+          this.cd.detectChanges();
+          this.decodedToken = jwtDecode(updatedToken);
+          this.errorMessage = '';
+        }, 1);
+      },
+      error: (error: any) => {
+        console.error('HTTP error:', error);
+        this.errorMessage = error?.error?.message || 'Unknown error';
+      },
+    });
   }
 
-  onSubmitEditProfile() {
-    this.webService
-      .editUser(this.decodedToken.userID, this.editForm.value)
-      .subscribe({
-        next: (response: any) => {
-          sessionStorage.setItem('token', response.token);
-          this.editForm.controls['email'].setValue('');
-          this.editForm.controls['password'].setValue('');
-          setTimeout(() => {
-            const updatedToken = sessionStorage.getItem('token')!;
-            this.cd.detectChanges();
-  
-            // Decode the token and update the decodedToken attribute directly without checking
-            this.decodedToken = jwtDecode(updatedToken);
-            this.errorMessage = '';
-          }, 1);
-        },
-        error: (error: any) => {
-          console.error('HTTP error:', error);
-          this.errorMessage = error?.error?.message || 'Unknown error';
-        },
-      });
-  }
-  
   onSubmitDeleteProfile() {
-    const token = sessionStorage.getItem('token');
-    if (token !== null) {
+    if (this.passwordIsValid) {
       this.webService.deleteUser(this.decodedToken.userID).subscribe({
         next: (response) => {
           sessionStorage.setItem('token', '');
@@ -101,6 +103,7 @@ export class UserProfileModalComponent {
         },
         error: (error) => {
           console.error('HTTP error:', error);
+          this.errorMessage = 'Failed to delete profile. Please try again.';
         },
       });
     }

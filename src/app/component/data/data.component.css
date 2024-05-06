@@ -10,15 +10,18 @@
   position: relative;
 }
 
-.filter-bar h1 {
+.centered-title {
+  margin-top: 10px;
   color: white;
   font-size: 30px;
-  font-weight: 300;
+  font-weight: 350;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 50%;
-  transform: translateY(-50%) translateX(-50%);
+}
+
+.export-button {
+  margin-left: auto;
 }
 
 .main-container {
@@ -58,7 +61,7 @@ mat-tab-group{
   font-size: large;
   background-color: rgba(31, 158, 35, 1);
   color: white;
-  font-weight: 300;
+  font-weight: 350;
   text-align: center;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;

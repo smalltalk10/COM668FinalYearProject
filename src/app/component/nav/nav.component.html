@@ -1,19 +1,19 @@
 <div class="navbar navbar-expand-sm navbar-dark fixed-top">
   <span class="navbar-brand" style="margin-left: 15px;">Agri-Insight Monitoring Project</span>
-  <ng-container *ngIf="sessionStorage.getItem('token'); noLinks">
+  <ng-container *ngIf="sessionStorage.getItem('token'); noRouter">
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+        <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/data">Historic Soil Data</a>
+        <a class="nav-link" routerLink="/data" routerLinkActive="active">Historic Soil Data</a>
       </li>
       <li class="nav-item">
-      <a class="nav-link" routerLink="/forecast">Forecasted Weather</a>
-    </li>
+        <a class="nav-link" routerLink="/forecast" routerLinkActive="active">Forecasted Weather</a>
+      </li>
     </ul>
   </ng-container>
-  <ng-template #noLinks>
+  <ng-template #noRouter>
   </ng-template>
   <div class="form-inline ms-auto">
     <ng-container *ngIf="sessionStorage.getItem('token'); else loggedOut">

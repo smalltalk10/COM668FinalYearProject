@@ -52,7 +52,7 @@ describe('WebService', () => {
 
   it('should log out a user', () => {
     const token = 'some-token';
-    service.logout(token).subscribe((response) => {
+    service.logout().subscribe((response) => {
       expect(response).toBeNull();
     });
 
@@ -63,7 +63,7 @@ describe('WebService', () => {
 
   it('should edit a user', () => {
     const editDetails = { email: 'new@example.com', password: 'new12345' };
-    service.editUser('1', editDetails).subscribe((response) => {
+    service.updateUser('1', editDetails).subscribe((response) => {
       expect(response).toEqual({ success: true });
     });
 
@@ -158,7 +158,8 @@ describe('WebService', () => {
   });
 
   it('should get location', () => {
-    service.getLocation().subscribe((response) => {
+    const id = '1234'
+    service.getLocation(id).subscribe((response) => {
       expect(response).toEqual({ location: 'location data' });
     });
 
@@ -168,8 +169,9 @@ describe('WebService', () => {
   });
 
   it('should update location', () => {
+    const id = '1234'
     const markerPosition = { lat: 10, lng: 20 };
-    service.updateLocation(markerPosition).subscribe((response) => {
+    service.updateLocation(id, markerPosition).subscribe((response) => {
       expect(response).toEqual({ success: true });
     });
 

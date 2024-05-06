@@ -1,7 +1,7 @@
 <div class="modal-header">
     <h2><b>E-mail:</b> {{decodedToken?.email}}</h2>
     <h1>Create & Edit Your Threshold Configurations</h1>
-    <h2><b>DeviceID:</b> {{decodedToken?.deviceID}}</h2>
+    <h2><b>Device ID:</b> {{decodedToken?.deviceID}}</h2>
 </div>
 <div class="modal-body">
     <mat-form-field>
@@ -43,7 +43,7 @@
                         </div>
                     </ng-container>
                     <label for="name" class="grid-label">Enter Alert Name:</label>
-                    <form [formGroup]="newThresholdForm" (ngSubmit)="onSubmitUpdateThreshold()" class="form-row">
+                    <form [formGroup]="thresholdForm" (ngSubmit)="onSubmitUpdateThreshold()" class="form-row">
                         <div class="form-group">
                             <input type="text" id="name" name="name" class="form-control" formControlName="name" />
                         </div>
@@ -74,7 +74,7 @@
                         <span class="center"><b>Use Slider to select Lower and Upper Threshold Range</b></span>
                         <span class="right"><b>Upper Threshold</b></span>
                     </div>
-                    <ng-container *ngFor="let condition of conditions; let i = index">
+                    <ng-container *ngFor="let condition of thresholdParameters; let i = index">
                         <label class="grid-label">{{ condition.name }}</label>
                         <div class="slider-container d-flex align-items-center">
                             <label class="slider-label">{{ condition.currentLowValue }}</label>
@@ -87,7 +87,7 @@
                         </div>
                     </ng-container>
                     <label for="name" class="grid-label">Enter Alert Name:</label>
-                    <form [formGroup]="newThresholdForm" (ngSubmit)="onSubmitCreateThreshold()" class="form-row">
+                    <form [formGroup]="thresholdForm" (ngSubmit)="onSubmitCreateThreshold()" class="form-row">
                         <div class="form-group">
                             <input type="text" id="name" name="name" class="form-control" formControlName="name" />
                         </div>

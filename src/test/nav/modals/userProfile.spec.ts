@@ -34,7 +34,7 @@ describe('UserProfileModalComponent', () => {
     });
 
     webServiceMock = {
-      editUser: jest.fn(),
+      updateUser: jest.fn(),
       deleteUser: jest.fn(),
     };
 
@@ -120,11 +120,6 @@ describe('UserProfileModalComponent', () => {
     expect(component.isIncomplete()).toBe(true);
   });
 
-  it('should check if email control is untouched', () => {
-    component.editForm = { controls: { email: { pristine: true } } } as any;
-    expect(component.isUntouched()).toBe(true);
-  });
-
   it('should submit edit profile', () => {
     component.decodedToken = { userID: '123' };
 
@@ -141,7 +136,7 @@ describe('UserProfileModalComponent', () => {
     };
 
     const response = { token: 'new_token' };
-    const editUserSpy = jest.spyOn(webServiceMock, 'editUser').mockReturnValue(of(response));
+    const editUserSpy = jest.spyOn(webServiceMock, 'updateUser').mockReturnValue(of(response));
     const setItemSpy = jest.spyOn(sessionStorage, 'setItem');
 
     component.onSubmitEditProfile();
@@ -157,7 +152,7 @@ describe('UserProfileModalComponent', () => {
 
   it('should handle edit profile error', () => {
     const error = { error: { message: 'Error message' } };
-    jest.spyOn(webServiceMock, 'editUser').mockReturnValue(throwError(error));
+    jest.spyOn(webServiceMock, 'updateUser').mockReturnValue(throwError(error));
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
 
     component.onSubmitEditProfile();

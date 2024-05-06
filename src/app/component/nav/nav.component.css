@@ -6,3 +6,17 @@
     background-color:rgba(20, 100, 20, 1);
     height: 4.5vh;
 }
+
+.nav-item .nav-link {
+    color: #bbbaba; /* Default color for unselected tabs */
+    font-family: 'Roboto', sans-serif; /* Modern font */
+}
+
+.nav-item .nav-link.active {
+    color: #ffffff; /* Color for selected tab */
+}
+
+/* Optional: Change hover color */
+.nav-item .nav-link:hover {
+    color: #ffffff; /* Hover color */
+}
