@@ -42,7 +42,7 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize login and register forms', () => {
+  it('should initialise login and register forms', () => {
     expect(component.loginForm).toBeDefined();
     expect(component.registerForm).toBeDefined();
     expect(component.loginForm.controls.username).toBeDefined();
@@ -75,7 +75,7 @@ describe('HomeComponent', () => {
     expect(component.isIncomplete('loginForm')).toBe(true);
   });
 
-  it('should update email validity', () => {
+  it('should update register form email and password validity', () => {
     component.registerForm = formBuilder.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -84,8 +84,11 @@ describe('HomeComponent', () => {
     });
 
     component.registerForm.controls['email'].setValue('test@example.com');
+    component.registerForm.controls['password'].setValue('testpassword1!');
     component.updateRegisterEmailValidity();
+    component.updateRegisterPasswordValidity();
     expect(component.registerEmailIsValid).toBe(true);
+    expect(component.registerPasswordIsValid).toBe(true);
   });
 
   it('should check if register form controls are invalid', () => {
@@ -146,6 +149,19 @@ describe('HomeComponent', () => {
 
     expect(consoleErrorSpy).toHaveBeenCalledWith('HTTP error:', error);
     expect(component.errorMessage).toBe('Login failed: Login error');
+  });
+
+  it('should update login form password validity', () => {
+    component.loginForm = formBuilder.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+    });
+
+    component.loginForm.controls['password'].setValue('testpassword1!');
+
+    component.updateLoginPasswordValidity();
+
+    expect(component.loginPasswordIsValid).toBe(true);
   });
 
   it('should submit user registration', () => {

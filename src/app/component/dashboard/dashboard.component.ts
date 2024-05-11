@@ -54,7 +54,6 @@ export class DashboardComponent implements OnInit {
     }
     this.loadCurrentMeasurements();
     this.loadLocation();
-    this.webService.getAllDateRangeMeasurements().subscribe();
   }
 
   loadCurrentMeasurements() {
@@ -68,6 +67,18 @@ export class DashboardComponent implements OnInit {
     this.webService.getLocation(this.decodedToken.deviceID).subscribe({
       next: (response: any) => this.handleLocationResponse(response),
       error: (error) => console.error('Received invalid coordinates:', error),
+    });
+  }
+
+  loadCurrentWeather(lat: number, lng: number) {
+    this.webService.getCurrentWeather(lat, lng).subscribe({
+      next: (response: any) => {
+        this.currentWeather = response.currentWeather;
+        this.currentAstro = response.astroData.astronomy;
+        this.isWeatherLoaded = true;
+      },
+      error: (error) =>
+        console.error('Received invalid weather response:', error),
     });
   }
 
@@ -96,19 +107,7 @@ export class DashboardComponent implements OnInit {
       this.currentPosition = `deviceID: ${this.deviceID}, Lat: ${this.markerPosition.lat} Lng: ${this.markerPosition.lng}`;
     }
   }
-
-  loadCurrentWeather(lat: number, lng: number) {
-    this.webService.getCurrentWeather(lat, lng).subscribe({
-      next: (response: any) => {
-        this.currentWeather = response.currentWeather;
-        this.currentAstro = response.astroData.astronomy;
-        this.isWeatherLoaded = true;
-      },
-      error: (error) =>
-        console.error('Received invalid weather response:', error),
-    });
-  }
-
+  
   onMapClick(event: any) {
     if (event.latLng) {
       this.updateMapLocation(event.latLng.lat(), event.latLng.lng());

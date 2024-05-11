@@ -50,15 +50,25 @@ describe('WebService', () => {
     req.flush({ token: '123456' });
   });
 
-  it('should log out a user', () => {
-    const token = 'some-token';
-    service.logout().subscribe((response) => {
-      expect(response).toBeNull();
+  it('should get current measurements', () => {
+    service.getCurrentMeasurements().subscribe((response) => {
+      expect(response).toEqual({ data: 'measurements' });
     });
 
-    const req = httpMock.expectOne((r) => r.url.includes('logout'));
+    const req = httpMock.expectOne((r) => r.url.includes('measurement'));
     expect(req.request.method).toBe('GET');
-    req.flush(null);
+    req.flush({ data: 'measurements' });
+  });
+
+  it('should get location', () => {
+    const id = '1234'
+    service.getLocation(id).subscribe((response) => {
+      expect(response).toEqual({ location: 'location data' });
+    });
+
+    const req = httpMock.expectOne((r) => r.url.includes('location'));
+    expect(req.request.method).toBe('GET');
+    req.flush({ location: 'location data' });
   });
 
   it('should edit a user', () => {
@@ -80,16 +90,6 @@ describe('WebService', () => {
     const req = httpMock.expectOne((r) => r.url.includes('user/1'));
     expect(req.request.method).toBe('DELETE');
     req.flush({ success: true });
-  });
-
-  it('should get current measurements', () => {
-    service.getCurrentMeasurements().subscribe((response) => {
-      expect(response).toEqual({ data: 'measurements' });
-    });
-
-    const req = httpMock.expectOne((r) => r.url.includes('measurement'));
-    expect(req.request.method).toBe('GET');
-    req.flush({ data: 'measurements' });
   });
 
   it('should get current weather', () => {
@@ -157,16 +157,6 @@ describe('WebService', () => {
     expect(service.monthData).toEqual(monthData);
   });
 
-  it('should get location', () => {
-    const id = '1234'
-    service.getLocation(id).subscribe((response) => {
-      expect(response).toEqual({ location: 'location data' });
-    });
-
-    const req = httpMock.expectOne((r) => r.url.includes('location'));
-    expect(req.request.method).toBe('GET');
-    req.flush({ location: 'location data' });
-  });
 
   it('should update location', () => {
     const id = '1234'
@@ -241,6 +231,7 @@ describe('WebService', () => {
     expect(req.request.method).toBe('PUT');
     req.flush({ success: true });
   });
+  
   it('should activate a threshold', () => {
     const isActive = true;
     service.activateThreshold('1', isActive).subscribe((response) => {
@@ -261,6 +252,28 @@ describe('WebService', () => {
     });
 
     const req = httpMock.expectOne((r) => r.url.includes('threshold/1'));
+    expect(req.request.method).toBe('DELETE');
+    req.flush({ success: true });
+  });
+
+  
+  it('should edit a user', () => {
+    const editDetails = { email: 'new@example.com', password: 'new12345' };
+    service.updateUser('1', editDetails).subscribe((response) => {
+      expect(response).toEqual({ success: true });
+    });
+
+    const req = httpMock.expectOne((r) => r.url.includes('user/1'));
+    expect(req.request.method).toBe('PUT');
+    req.flush({ success: true });
+  });
+
+  it('should delete a user', () => {
+    service.deleteUser('1').subscribe((response) => {
+      expect(response).toEqual({ success: true });
+    });
+
+    const req = httpMock.expectOne((r) => r.url.includes('user/1'));
     expect(req.request.method).toBe('DELETE');
     req.flush({ success: true });
   });

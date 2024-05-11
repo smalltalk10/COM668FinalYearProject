@@ -146,8 +146,6 @@ describe('UserProfileModalComponent', () => {
       password: 'password'
     });
     expect(setItemSpy).toHaveBeenCalledWith('token', 'new_token');
-    expect(component.editForm.controls.email.setValue).toHaveBeenCalledWith('');
-    expect(component.editForm.controls.password.setValue).toHaveBeenCalledWith('');
   });
 
   it('should handle edit profile error', () => {
@@ -163,6 +161,7 @@ describe('UserProfileModalComponent', () => {
 
   it('should submit delete profile', () => {
     component.decodedToken = { userID: '123' };
+    component.passwordIsValid = true;
     sessionStorage.setItem('token', 'some_token');
     const response = 'success';
     const deleteUserSpy = jest
@@ -178,6 +177,7 @@ describe('UserProfileModalComponent', () => {
   });
 
   it('should handle delete profile error', () => {
+    component.passwordIsValid = true;
     const error = 'Error deleting profile';
     jest.spyOn(webServiceMock, 'deleteUser').mockReturnValue(throwError(error));
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();

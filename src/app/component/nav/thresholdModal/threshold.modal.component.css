@@ -16,7 +16,7 @@
 
 .center {
   display: flex;
-  justify-content: space-between; /* Ensures maximum space between children */
+  justify-content: space-between;
   align-items: center;
   width: 100%;
 }

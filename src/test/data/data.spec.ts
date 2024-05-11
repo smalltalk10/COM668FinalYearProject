@@ -4,12 +4,21 @@ import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { DataComponent } from 'src/app/component/data/data.component';
 import { WebService } from 'src/app/web.service';
+import * as fileSaver from 'file-saver';
+
+jest.mock('file-saver', () => ({
+  saveAs: jest.fn(() => console.log('Mocked saveAs called')),
+}));
 
 describe('DataComponent', () => {
   let component: DataComponent;
   let fixture: ComponentFixture<DataComponent>;
   let webServiceMock: jest.Mocked<WebService>;
   let router: jest.Mocked<Router>;
+
+  beforeAll(() => {
+    Object.defineProperty(window.URL, 'createObjectURL', { value: jest.fn() });
+  });
 
   beforeEach(async () => {
     webServiceMock = {
@@ -38,6 +47,7 @@ describe('DataComponent', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    jest.restoreAllMocks();
   });
 
   it('should create', () => {
@@ -47,12 +57,14 @@ describe('DataComponent', () => {
   it('should redirect if no token is present', () => {
     sessionStorage.removeItem('token');
     component.ngOnInit();
+    
     expect(router.navigateByUrl).toHaveBeenCalledWith('/');
   });
 
   it('should not redirect and fetch data if token is present', () => {
     sessionStorage.setItem('token', 'valid-token');
     component.ngOnInit();
+
     expect(router.navigateByUrl).not.toHaveBeenCalled();
     expect(webServiceMock.getAllDateRangeMeasurements).toHaveBeenCalled();
   });
@@ -61,11 +73,13 @@ describe('DataComponent', () => {
     const error = new Error('Error fetching data');
     webServiceMock.getAllDateRangeMeasurements.mockReturnValue(throwError(() => error));
     component.ngOnInit();
+
     expect(webServiceMock.getAllDateRangeMeasurements).toHaveBeenCalled();
   });
 
   it('should update data and charts based on selected range', () => {
     component.onTabChange(2);
+
     expect(component.dateRange).toEqual('month');
     expect(component.title).toEqual('Monthly');
   });
@@ -73,6 +87,7 @@ describe('DataComponent', () => {
   it('should process and format grid data correctly', () => {
     const sampleData = [{ Body: { datetime: '2021-01-01', moisture: 10, temperature: 25, ec: 1, ph: 7, nitrogen: 3, phosphorus: 4, potassium: 5 } }];
     const gridData = component.createGridOptions(sampleData);
+
     expect(gridData.length).toBeGreaterThan(0);
     expect(gridData[0]).toHaveProperty('average');
     expect(gridData[0]).toHaveProperty('median');
@@ -81,9 +96,33 @@ describe('DataComponent', () => {
   it('should calculate statistics correctly', () => {
     const values = [10, 20, 30, 40, 50];
     const stats = component.calculateStatistics(values);
+    
     expect(stats.average).toEqual('30.00');
     expect(stats.median).toEqual('30.00');
     expect(stats.minValue).toEqual('10.00');
     expect(stats.maxValue).toEqual('50.00');
+  });
+
+ it('should export sensor data to a CSV file', () => {
+    component.sensorData = [{
+      Body: {
+        datetime: '2021-01-01T00:00:00Z',
+        moisture: 10,
+        temperature: 25,
+        ec: 1,
+        ph: 7,
+        nitrogen: 3,
+        phosphorus: 4,
+        potassium: 5
+      }
+    }];
+    component.dateRange = 'day';
+    component.exportToCsv();
+
+    expect(fileSaver.saveAs).toHaveBeenCalled();
+    const blob = (fileSaver.saveAs as unknown as jest.Mock).mock.calls[0][0];
+    expect(blob).toBeInstanceOf(Blob);
+    const filename = (fileSaver.saveAs as unknown as jest.Mock).mock.calls[0][1];
+    expect(filename).toEqual(`${component.dateRange}_soil_sensor_data.csv`);
   });
 });

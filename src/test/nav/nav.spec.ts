@@ -13,7 +13,7 @@ describe('NavComponent', () => {
     let component: NavComponent;
     let fixture: ComponentFixture<NavComponent>;
     let router: jest.Mocked<Router>;
-    let modalService: jest.Mocked<NgbModal>;  // Declare modalService as a Jest mocked type
+    let modalService: jest.Mocked<NgbModal>;
 
     beforeEach(async () => {
 

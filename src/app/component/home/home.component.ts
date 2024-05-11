@@ -21,7 +21,6 @@ export class HomeComponent {
   loginForm: any;
   registerForm: any;
   errorMessage: string = '';
-  loginEmailIsValid: boolean = false;
   loginPasswordIsValid: boolean = false;
   registerEmailIsValid: boolean = false;
   registerPasswordIsValid: boolean = false;
@@ -59,10 +58,6 @@ export class HomeComponent {
       ],
       deviceID: ['', Validators.required]
     });
-  }
-
-  updateLoginEmailValidity() {
-    this.loginEmailIsValid = this.loginForm.controls.username.valid;
   }
 
   updateLoginPasswordValidity() {

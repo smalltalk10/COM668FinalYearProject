@@ -3,6 +3,7 @@ import { WebService } from '../../web.service';
 import { AgChartOptions, time } from 'ag-charts-community';
 import { ColDef } from 'ag-grid-community';
 import { Router } from '@angular/router';
+import { saveAs } from 'file-saver';
 
 interface SensorData {
   Body: {
@@ -36,6 +37,8 @@ export class DataComponent implements OnInit {
   dateRange = 'day';
   title = 'Daily';
 
+  sensorData: SensorData[] = [];
+  statisticsData: any[] = [];
   rowData: any[] = [];
   colDefs: ColDef[] = [
     { field: 'condition' },
@@ -65,8 +68,14 @@ export class DataComponent implements OnInit {
     if (!token) {
       this.router.navigateByUrl('/');
     }
-    this.webService.getAllDateRangeMeasurements().subscribe();
-    this.updateChartDataBasedOnRange();
+    this.webService
+      .getAllDateRangeMeasurements()
+      .subscribe((data: SensorData[]) => {
+        this.sensorData = data;
+        this.updateChartData(data);
+        this.updateGridOptions(data);
+        this.updateChartDataBasedOnRange();
+      });
   }
 
   onTabChange(index: number) {
@@ -101,59 +110,22 @@ export class DataComponent implements OnInit {
     }));
   }
 
-  calculateStatistics(values: number[]) {
-    if (values.length === 0) {
-      return {
-        average: 'N/A',
-        standardDeviation: 'N/A',
-        median: 'N/A',
-        minValue: 'N/A',
-        maxValue: 'N/A',
-        percentile25: 'N/A',
-        percentile75: 'N/A',
-      };
-    }
-
-    values.sort((a, b) => a - b);
-    const average = values.reduce((sum, val) => sum + val, 0) / values.length;
-    const mid = Math.floor(values.length / 2);
-    const median =
-      values.length % 2 !== 0
-        ? values[mid]
-        : (values[mid - 1] + values[mid]) / 2;
-    const min = values[0];
-    const max = values[values.length - 1];
-    const percentile25 = values[Math.floor(0.25 * values.length)];
-    const percentile75 = values[Math.floor(0.75 * values.length)];
-    const variance =
-      values.reduce((acc, val) => acc + (val - average) ** 2, 0) /
-      values.length;
-    const standardDeviation = Math.sqrt(variance);
-
-    return {
-      average: average.toFixed(2),
-      standardDeviation: standardDeviation.toFixed(2),
-      median: median.toFixed(2),
-      minValue: min.toFixed(2),
-      maxValue: max.toFixed(2),
-      percentile25: percentile25.toFixed(2),
-      percentile75: percentile75.toFixed(2),
-    };
-  }
-
   updateChartDataBasedOnRange() {
     let data: any;
     switch (this.dateRange) {
       case 'day':
         data = this.webService.dayData;
+        this.sensorData = data;
         this.title = 'Daily';
         break;
       case 'week':
         data = this.webService.weekData;
+        this.sensorData = data;
         this.title = 'Weekly';
         break;
       case 'month':
         data = this.webService.monthData;
+        this.sensorData = data;
         this.title = 'Monthly';
         break;
     }
@@ -189,13 +161,13 @@ export class DataComponent implements OnInit {
     this.temperatureChartOptions = this.createChartOptions(
       formattedData,
       'temperature',
-      'Degress Celcuius (°C)',
+      'Degrees Celsius (°C)',
       tickInterval
     );
     this.moistureChartOptions = this.createChartOptions(
       formattedData,
       'moisture',
-      'Moisutre Percentage (%)',
+      'Moisture Percentage (%)',
       tickInterval
     );
     this.salinityChartOptions = this.createChartOptions(
@@ -309,6 +281,72 @@ export class DataComponent implements OnInit {
     };
   }
 
+  private updateGridOptions(data: SensorData[]) {
+    this.statisticsData = this.createGridOptions(data);
+    this.rowData = this.statisticsData;
+  }
+
+  calculateStatistics(values: number[]) {
+    if (values.length === 0) {
+      return {
+        average: 'N/A',
+        standardDeviation: 'N/A',
+        median: 'N/A',
+        minValue: 'N/A',
+        maxValue: 'N/A',
+        percentile25: 'N/A',
+        percentile75: 'N/A',
+      };
+    }
+
+    values.sort((a, b) => a - b);
+    const average = values.reduce((sum, val) => sum + val, 0) / values.length;
+    const mid = Math.floor(values.length / 2);
+    const median =
+      values.length % 2 !== 0
+        ? values[mid]
+        : (values[mid - 1] + values[mid]) / 2;
+    const min = values[0];
+    const max = values[values.length - 1];
+    const percentile25 = values[Math.floor(0.25 * values.length)];
+    const percentile75 = values[Math.floor(0.75 * values.length)];
+    const variance =
+      values.reduce((acc, val) => acc + (val - average) ** 2, 0) /
+      values.length;
+    const standardDeviation = Math.sqrt(variance);
+
+    return {
+      average: average.toFixed(2),
+      standardDeviation: standardDeviation.toFixed(2),
+      median: median.toFixed(2),
+      minValue: min.toFixed(2),
+      maxValue: max.toFixed(2),
+      percentile25: percentile25.toFixed(2),
+      percentile75: percentile75.toFixed(2),
+    };
+  }
+
   exportToCsv() {
+    if (!this.sensorData || this.sensorData.length === 0) {
+      return;
+    }
+
+    const header = this.colDefs.map((colDef) => colDef.headerName).join(',');
+    const rows = this.sensorData.map((row) => {
+      return [
+        row.Body.datetime,
+        row.Body.temperature,
+        row.Body.moisture,
+        row.Body.ec,
+        row.Body.ph,
+        row.Body.nitrogen,
+        row.Body.phosphorus,
+        row.Body.potassium,
+      ].join(',');
+    });
+    const csvContent = [header, ...rows].join('\r\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    saveAs(blob, `${this.dateRange}_soil_sensor_data.csv`);
   }
 }

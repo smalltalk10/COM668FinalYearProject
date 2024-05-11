@@ -11,7 +11,7 @@
           <div class="form-group">
             <label for="name">Enter Username</label>
             <input type="text" id="username" name="username" class="form-control" formControlName="username"
-              [ngClass]="{ 'is-invalid': isInvalid('username', 'loginForm') }" (input)="updateLoginEmailValidity()" />
+              [ngClass]="{ 'is-invalid': isInvalid('username', 'loginForm') }" />
             <div *ngIf="isInvalid('username', 'loginForm')" class="invalid-feedback">
               Please enter a valid username.
             </div>
@@ -30,7 +30,7 @@
             [ngClass]="{'hint-text': !errorMessage, 'errorText': errorMessage}">
             {{ errorMessage || 'Valid credentials must be entered' }}
           </small>
-          <button *ngIf="loginEmailIsValid && loginPasswordIsValid" mat-raised-button color="primary" type="submit" class="btn btn-primary">
+          <button *ngIf="loginPasswordIsValid" mat-raised-button color="primary" type="submit" class="btn btn-primary">
             Log In
           </button>
         </div>

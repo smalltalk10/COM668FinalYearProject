@@ -105,7 +105,6 @@ export class ThresholdModalComponent implements OnInit {
       name: ['', Validators.required],
     });
     this.fetchGrid();
-    this.gridOptions.context.componentParent = this;
   }
 
   fetchGrid() {
@@ -123,59 +122,6 @@ export class ThresholdModalComponent implements OnInit {
         console.error('Error fetching data:', error);
       },
     });
-  }
-
-  onGridReady(params: GridReadyEvent) {
-    this.gridApi = params.api;
-    this.gridApi.setGridOption('rowData', this.rowData);
-  }
-
-  public rowSelection: any = 'single';
-  onSelectionChanged(event: any) {
-    var selectedRow = this.gridApi.getSelectedRows()[0];
-
-    if (selectedRow !== undefined) {
-      const updatedConditions = this.thresholdParameters.map((condition: any) => {
-        const mapping: any = this.conditionsMapping.find(
-          (m) => m.name === condition.name
-        );
-        return {
-          ...condition,
-          currentLowValue: parseInt(selectedRow[mapping.minKey], 10),
-          currentHighValue: parseInt(selectedRow[mapping.maxKey], 10),
-        };
-      });
-      this.selectedThreshold.name = selectedRow.name;
-      this.selectedThreshold.id = selectedRow.id;
-      this.selectedThreshold.selectedConditions = updatedConditions;
-      this.thresholdForm.get('name').setValue(this.selectedThreshold.name);
-    } else {
-      this.selectedThreshold = {
-        selectedParameters: [],
-      };
-      this.thresholdForm.get('name').setValue('');
-    }
-  }
-
-  nameInvalid(): boolean {
-    const control = this.thresholdForm.get('name');
-    return (
-      control.invalid && (control.dirty || this.thresholdForm.untouched)
-    );
-  }
-
-  onFilterTextBoxChanged() {
-    this.gridApi.setGridOption(
-      'quickFilterText',
-      (document.getElementById('filter-text-box') as HTMLInputElement).value
-    );
-  }
-
-  formatLabel(value: number): string {
-    if (value >= 1000) {
-      return `${Math.round(value / 1000)}k`;
-    }
-    return value.toString();
   }
 
   handleSliderChange(event: any, condition: any): void {
@@ -233,4 +179,58 @@ export class ThresholdModalComponent implements OnInit {
       },
     });
   }
+
+  onGridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+    this.gridApi.setGridOption('rowData', this.rowData);
+  }
+
+  public rowSelection: any = 'single';
+  onSelectionChanged(event: any) {
+    var selectedRow = this.gridApi.getSelectedRows()[0];
+
+    if (selectedRow !== undefined) {
+      const updatedConditions = this.thresholdParameters.map((condition: any) => {
+        const mapping: any = this.conditionsMapping.find(
+          (m) => m.name === condition.name
+        );
+        return {
+          ...condition,
+          currentLowValue: parseInt(selectedRow[mapping.minKey], 10),
+          currentHighValue: parseInt(selectedRow[mapping.maxKey], 10),
+        };
+      });
+      this.selectedThreshold.name = selectedRow.name;
+      this.selectedThreshold.id = selectedRow.id;
+      this.selectedThreshold.selectedConditions = updatedConditions;
+      this.thresholdForm.get('name').setValue(this.selectedThreshold.name);
+    } else {
+      this.selectedThreshold = {
+        selectedParameters: [],
+      };
+      this.thresholdForm.get('name').setValue('');
+    }
+  }
+
+  nameInvalid(): boolean {
+    const control = this.thresholdForm.get('name');
+    return (
+      control.invalid && (control.dirty || this.thresholdForm.untouched)
+    );
+  }
+
+  onFilterTextBoxChanged() {
+    this.gridApi.setGridOption(
+      'quickFilterText',
+      (document.getElementById('filter-text-box') as HTMLInputElement).value
+    );
+  }
+
+  formatLabel(value: number): string {
+    if (value >= 1000) {
+      return `${Math.round(value / 1000)}k`;
+    }
+    return value.toString();
+  }
+
 }

@@ -24,7 +24,6 @@ export class NavComponent {
     this.modalService.open(DeviceModalComponent, { size: 'lg' });
   }
 
-
   onOpenThresholdModal() {
     this.modalService.open(ThresholdModalComponent, {
       windowClass: 'custom-large-modal',
