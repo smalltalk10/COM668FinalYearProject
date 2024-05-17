@@ -107,6 +107,23 @@ export class ThresholdModalComponent implements OnInit {
     });
   }
 
+  handleSliderChange(event: any, condition: any): void {
+    condition.currentValue = event.value;
+  }
+
+  nameInvalid(): boolean {
+    const control = this.thresholdForm.get('name');
+    return control.invalid && (control.dirty || this.thresholdForm.untouched);
+  }
+
+  onFilterTextBoxChanged() {
+    this.gridApi.setGridOption(
+      'quickFilterText',
+      (document.getElementById('filter-text-box') as HTMLInputElement).value
+    );
+  }
+
+
   onSubmitCreateThreshold() {
     if (this.thresholdForm.valid) {
       this.webService
@@ -171,9 +188,6 @@ export class ThresholdModalComponent implements OnInit {
     });
   }
 
-  handleSliderChange(event: any, condition: any): void {
-    condition.currentValue = event.value;
-  }
 
 
   public rowSelection: any = 'single';
@@ -208,18 +222,6 @@ export class ThresholdModalComponent implements OnInit {
   onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
     this.gridApi.setGridOption('rowData', this.rowData);
-  }
-
-  nameInvalid(): boolean {
-    const control = this.thresholdForm.get('name');
-    return control.invalid && (control.dirty || this.thresholdForm.untouched);
-  }
-
-  onFilterTextBoxChanged() {
-    this.gridApi.setGridOption(
-      'quickFilterText',
-      (document.getElementById('filter-text-box') as HTMLInputElement).value
-    );
   }
 
   formatLabel(value: number): string {
