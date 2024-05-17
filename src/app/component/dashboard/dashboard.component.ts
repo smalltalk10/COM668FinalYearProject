@@ -73,8 +73,6 @@ export class DashboardComponent implements OnInit {
   handleLocationResponse(response: any) {
     const latitude = parseFloat(response.lat);
     const longitude = parseFloat(response.lng);
-    sessionStorage.setItem('lat', latitude.toString());
-    sessionStorage.setItem('lng', longitude.toString());
     this.mapCoordinates = { lat: latitude, lng: longitude };
     if (!isNaN(latitude) && !isNaN(longitude)) {
       this.updateMapLocation(latitude, longitude);
@@ -88,7 +86,6 @@ export class DashboardComponent implements OnInit {
     this.updateCurrentPosition();
     this.isLocationLoaded = true;
   }
-
 
   loadCurrentWeather(lat: number, lng: number) {
     this.webService.getCurrentWeather(lat, lng).subscribe({
