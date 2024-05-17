@@ -61,6 +61,11 @@ mat-expansion-panel {
   background-color: rgba(31, 158, 35, 0.1);
 }
 
+.card-header {
+  height: 5vh;
+  background-color: rgba(211,236,213,255);
+}
+
 .slider-label {
   min-width: 35px;
   text-align: center;
@@ -109,7 +114,7 @@ button {
 }
 
 .remove-icon{
-  transform: scale(.65);
+  transform: scale(.8);
   float: right;
   margin-top: -20px;
   margin-bottom: -20px;
@@ -117,4 +122,15 @@ button {
 
 .no-pointer {
   pointer-events: none;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 15px;
+}
+
+.button-container {
+  display: flex;
+  gap: 10px;
 }

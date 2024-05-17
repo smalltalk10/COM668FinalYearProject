@@ -1,9 +1,11 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, TemplateRef } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, Validators } from '@angular/forms';
 import { WebService } from '../../../web.service';
 import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-user-profile-modal',
@@ -16,7 +18,8 @@ export class UserProfileModalComponent {
     public activeModal: NgbActiveModal,
     private formBuilder: FormBuilder,
     private router: Router,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private modalService: NgbModal
   ) {}
 
   editForm: any;
@@ -25,6 +28,9 @@ export class UserProfileModalComponent {
   emailIsValid: boolean = false;
   passwordIsValid: boolean = false;
 
+  @ViewChild('confirmationModal', { static: true }) confirmationModal:
+    | TemplateRef<any>
+    | undefined;
   ngOnInit() {
     const token = sessionStorage.getItem('token');
     if (token) {
@@ -47,7 +53,9 @@ export class UserProfileModalComponent {
         [
           Validators.required,
           Validators.minLength(8),
-          Validators.pattern('^(?=.*[0-9])(?=.*[!@#$%^&*-])[a-zA-Z0-9!@#$%^&*-]+$'),
+          Validators.pattern(
+            '^(?=.*[0-9])(?=.*[!@#$%^&*-])[a-zA-Z0-9!@#$%^&*-]+$'
+          ),
         ],
       ],
     });
@@ -75,37 +83,49 @@ export class UserProfileModalComponent {
   }
 
   onSubmitEditProfile() {
-    this.webService.updateUser(this.decodedToken.userID, this.editForm.value).subscribe({
-      next: (response: any) => {
-        sessionStorage.setItem('token', response.token);
-        this.editForm.reset();
-        setTimeout(() => {
-          const updatedToken = sessionStorage.getItem('token')!;
-          this.cd.detectChanges();
-          this.decodedToken = jwtDecode(updatedToken);
-          this.errorMessage = '';
-        }, 1);
-      },
-      error: (error: any) => {
-        console.error('HTTP error:', error);
-        this.errorMessage = error?.error?.message || 'Unknown error';
-      },
-    });
+    this.webService
+      .updateUser(this.decodedToken.userID, this.editForm.value)
+      .subscribe({
+        next: (response: any) => {
+          sessionStorage.setItem('token', response.token);
+          this.editForm.reset();
+          setTimeout(() => {
+            const updatedToken = sessionStorage.getItem('token')!;
+            this.cd.detectChanges();
+            this.decodedToken = jwtDecode(updatedToken);
+            this.errorMessage = '';
+          }, 1);
+        },
+        error: (error: any) => {
+          console.error('HTTP error:', error);
+          this.errorMessage = error?.error?.message || 'Unknown error';
+        },
+      });
   }
 
   onSubmitDeleteProfile() {
-    if (this.passwordIsValid) {
-      this.webService.deleteUser(this.decodedToken.userID).subscribe({
-        next: (response) => {
-          sessionStorage.setItem('token', '');
-          this.closeModal();
-          this.router.navigateByUrl('/');
-        },
-        error: (error) => {
-          console.error('HTTP error:', error);
-          this.errorMessage = 'Failed to delete profile. Please try again.';
-        },
-      });
-    }
+    const modalRef = this.modalService.open(this.confirmationModal!, {
+      centered: true,
+    });
+
+    modalRef.result.then((result) => {
+      if (result === 'delete') {
+        this.deleteProfile();
+      }
+    });
+  }
+
+  deleteProfile() {
+    this.webService.deleteUser(this.decodedToken.userID).subscribe({
+      next: (response) => {
+        sessionStorage.setItem('token', '');
+        this.closeModal();
+        this.router.navigateByUrl('/');
+      },
+      error: (error) => {
+        console.error('HTTP error:', error);
+        this.errorMessage = 'Failed to delete profile. Please try again.';
+      },
+    });
   }
 }

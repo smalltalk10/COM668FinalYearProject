@@ -52,3 +52,8 @@ p { font-size: 40px; }
     padding-bottom: 10px;
     border-top: 1px solid #ccc;  /* Optional: adds a subtle line to separate the form from the buttons */
 }
+
+::ng-deep .mat-mdc-tab-group .mat-mdc-tab .mdc-tab__text-label,
+::ng-deep .mat-mdc-tab-group .mat-mdc-tab-link .mdc-tab__text-label {
+    color: rgb(90, 90, 90);
+}

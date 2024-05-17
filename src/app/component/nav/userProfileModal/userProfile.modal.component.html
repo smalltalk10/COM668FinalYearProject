@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="form-group">
-      <label for="password">Enter Password to Update or Delete Profile</label>
+      <label for="password">Enter Password to Update Profile</label>
       <input type="password" id="password" class="form-control" formControlName="password"
         (input)="updatePasswordValidity()" [ngClass]="{ 'is-invalid': isInvalid('password') }" />
       <div *ngIf="isInvalid('password')" class="invalid-feedback">
@@ -31,10 +31,24 @@
     </button>
     <small *ngIf="isIncomplete() || errorMessage" class="form-text"
       [ngClass]="{'hint-text': !errorMessage, 'error-message': errorMessage}">
-      {{ errorMessage || 'Valid password must be entered to update or delete profile' }}
+      {{ errorMessage || 'Valid Password Must be Entered to Update Profile' }}
     </small>
-    <button mat-raised-button color="warn" type="button" (click)="onSubmitDeleteProfile()" [disabled]="!passwordIsValid">
+    <button mat-raised-button color="warn" type="button" (click)="onSubmitDeleteProfile()">
       Delete Profile
     </button>
   </div>
 </form>
+<ng-template #confirmationModal let-modal>
+  <div class="modal-header">
+    <h2><b>Delete Confirmation</b></h2>
+  </div>
+  <div class="modal-body">
+    <p>Are you sure you want to delete your user profile?</p>
+  </div>
+  <div class="modal-footer">
+    <div class="button-container">
+      <button type="button" mat-raised-button color="accent" (click)="modal.dismiss('cancel')">Cancel</button>
+      <button type="button" mat-raised-button color="warn" (click)="modal.close('delete')">Confirm Delete Profile</button>
+    </div>
+  </div>
+</ng-template>

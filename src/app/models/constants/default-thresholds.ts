@@ -17,9 +17,9 @@ export const DefaultThresholds = {
       {
         name: 'Salinity (µS/cm)',
         minValue: 0,
-        maxValue: 1200,
+        maxValue: 1500,
         currentLowValue: 0,
-        currentHighValue: 1200,
+        currentHighValue: 1500,
       },
       {
         name: 'pH',

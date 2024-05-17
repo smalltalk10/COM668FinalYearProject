@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { WebService } from '../../../web.service';
 import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
@@ -6,31 +6,16 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { jwtDecode } from 'jwt-decode';
 import { ActiveBtnCellRendererComponent } from './cellRenderers/activeBtnCellRenderer.component';
 import { Router } from '@angular/router';
-import { DefaultThresholds, conditionsMapping } from '../../../models/constants/default-thresholds';
-
-export interface Threshold {
-  id: string;
-  name: string;
-  temperatureMin: number;
-  temperatureMax: number;
-  moistureMin: number;
-  moistureMax: number;
-  ecMin: number;
-  ecMax: number;
-  phMin: number;
-  phMax: number;
-  nitrogenMin: number;
-  nitrogenMax: number;
-  phosphorusMin: number;
-  phosphorusMax: number;
-  potassiumMin: number;
-  potassiumMax: number;
-  isActive?: string;
-}
-
-export interface ThresholdData {
-  value: Threshold[];
-}
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ViewChild } from '@angular/core';
+import {
+  DefaultThresholds,
+  conditionsMapping,
+} from '../../../models/constants/default-thresholds';
+import {
+  Threshold,
+  ThresholdData,
+} from 'src/app/models/interfaces/threshold-interfaces';
 
 @Component({
   selector: 'app-threshold-modal',
@@ -49,12 +34,7 @@ export class ThresholdModalComponent implements OnInit {
 
   gridApi!: GridApi;
   rowData: Threshold[] = [];
-  gridOptions: any = {
-    context: {
-      componentParent: this
-    }
-  };
-  
+
   colDefs: ColDef[] = [
     { field: 'name', headerName: 'Alert Name' },
     { field: 'temperatureMin', headerName: 'Temp Min' },
@@ -78,22 +58,25 @@ export class ThresholdModalComponent implements OnInit {
       cellRenderer: ActiveBtnCellRendererComponent,
       width: 250,
       cellRendererParams: {
-        onClick: (id: string, isActive: boolean) => this.handleActiveToggle(id, isActive)
+        onClick: (id: string, isActive: boolean) =>
+          this.handleActiveToggle(id, isActive),
       },
-    }
+    },
   ];
 
   autoSizeStrategy: any = {
     type: 'fitGridWidth',
   };
-
+  
   constructor(
     public activeModal: NgbActiveModal,
     public webService: WebService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private modalService: NgbModal
   ) {}
 
+  @ViewChild('confirmationModal', { static: true }) confirmationModal: TemplateRef<any> | undefined;
   ngOnInit(): void {
     const token = sessionStorage.getItem('token');
     if (token) {
@@ -170,6 +153,18 @@ export class ThresholdModalComponent implements OnInit {
   }
 
   onSubmitDeleteThreshold() {
+    const modalRef = this.modalService.open(this.confirmationModal!, { centered: true });
+  
+    modalRef.result.then(
+      (result) => {
+        if (result === 'delete') {
+          this.deleteThreshold();
+        }
+      },
+    )
+  }
+
+  deleteThreshold() {
     this.webService.deleteThreshold(this.selectedThreshold.id).subscribe({
       next: () => {
         this.fetchGrid();
@@ -190,16 +185,18 @@ export class ThresholdModalComponent implements OnInit {
     var selectedRow = this.gridApi.getSelectedRows()[0];
 
     if (selectedRow !== undefined) {
-      const updatedConditions = this.thresholdParameters.map((condition: any) => {
-        const mapping: any = this.conditionsMapping.find(
-          (m) => m.name === condition.name
-        );
-        return {
-          ...condition,
-          currentLowValue: parseInt(selectedRow[mapping.minKey], 10),
-          currentHighValue: parseInt(selectedRow[mapping.maxKey], 10),
-        };
-      });
+      const updatedConditions = this.thresholdParameters.map(
+        (condition: any) => {
+          const mapping: any = this.conditionsMapping.find(
+            (m) => m.name === condition.name
+          );
+          return {
+            ...condition,
+            currentLowValue: parseInt(selectedRow[mapping.minKey], 10),
+            currentHighValue: parseInt(selectedRow[mapping.maxKey], 10),
+          };
+        }
+      );
       this.selectedThreshold.name = selectedRow.name;
       this.selectedThreshold.id = selectedRow.id;
       this.selectedThreshold.selectedConditions = updatedConditions;
@@ -214,9 +211,7 @@ export class ThresholdModalComponent implements OnInit {
 
   nameInvalid(): boolean {
     const control = this.thresholdForm.get('name');
-    return (
-      control.invalid && (control.dirty || this.thresholdForm.untouched)
-    );
+    return control.invalid && (control.dirty || this.thresholdForm.untouched);
   }
 
   onFilterTextBoxChanged() {
@@ -232,5 +227,4 @@ export class ThresholdModalComponent implements OnInit {
     }
     return value.toString();
   }
-
 }

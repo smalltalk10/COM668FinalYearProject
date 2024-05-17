@@ -168,7 +168,7 @@ describe('UserProfileModalComponent', () => {
       .spyOn(webServiceMock, 'deleteUser')
       .mockReturnValue(of(response));
 
-    component.onSubmitDeleteProfile();
+    component.deleteProfile();
 
     expect(deleteUserSpy).toHaveBeenCalledWith('123');
     expect(sessionStorage.setItem).toHaveBeenCalledWith('token', '');
@@ -182,7 +182,7 @@ describe('UserProfileModalComponent', () => {
     jest.spyOn(webServiceMock, 'deleteUser').mockReturnValue(throwError(error));
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
 
-    component.onSubmitDeleteProfile();
+    component.deleteProfile();
 
     expect(consoleErrorSpy).toHaveBeenCalledWith('HTTP error:', error);
   });

@@ -95,7 +95,7 @@ describe('ThresholdModalComponent', () => {
 
   it('should delete threshold on request', () => {
     component.selectedThreshold.id = '123';
-    component.onSubmitDeleteThreshold();
+    component.deleteThreshold();
     expect(webServiceMock.deleteThreshold).toHaveBeenCalledWith('123');
   });
 
@@ -137,7 +137,7 @@ describe('ThresholdModalComponent', () => {
       selectedConditions: [
         { name: 'Temperature (°C)', minValue: -20, maxValue: 60, currentLowValue: 10, currentHighValue: 20 },
         { name: 'Moisture (%)', minValue: 0, maxValue: 100, currentLowValue: NaN, currentHighValue: NaN },
-        { name: 'Salinity (µS/cm)', minValue: 0, maxValue: 1200, currentLowValue: NaN, currentHighValue: NaN },
+        { name: 'Salinity (µS/cm)', minValue: 0, maxValue: 1500, currentLowValue: NaN, currentHighValue: NaN },
         { name: 'pH', minValue: 0, maxValue: 14, currentLowValue: NaN, currentHighValue: NaN },
         { name: 'Nitrogen (mg/kg)', minValue: 0, maxValue: 200, currentLowValue: NaN, currentHighValue: NaN },
         { name: 'Phosphorus (mg/kg)', minValue: 0, maxValue: 250, currentLowValue: NaN, currentHighValue: NaN },
@@ -276,7 +276,7 @@ describe('ThresholdModalComponent', () => {
 
     webServiceMock.deleteThreshold.mockReturnValue(throwError('API error'));
   
-    component.onSubmitDeleteThreshold();
+    component.deleteThreshold();
   
     expect(webServiceMock.deleteThreshold).toHaveBeenCalledWith('123');
   });

@@ -4,29 +4,10 @@ import { AgChartOptions, time } from 'ag-charts-community';
 import { ColDef } from 'ag-grid-community';
 import { Router } from '@angular/router';
 import { saveAs } from 'file-saver';
-
-interface SensorData {
-  Body: {
-    datetime: string;
-    moisture: number;
-    temperature: number;
-    ec: number;
-    ph: number;
-    nitrogen: number;
-    phosphorus: number;
-    potassium: number;
-  };
-}
-
-interface StatisticsData {
-  moisture: number[];
-  temperature: number[];
-  ec: number[];
-  ph: number[];
-  nitrogen: number[];
-  phosphorus: number[];
-  potassium: number[];
-}
+import {
+  SensorData,
+  StatisticsData,
+} from 'src/app/models/interfaces/sensor-interaces';
 
 @Component({
   selector: 'data-component',
@@ -55,11 +36,11 @@ export class DataComponent implements OnInit {
     type: 'fitGridWidth',
   };
 
-  temperatureChartOptions: AgChartOptions | null = null;
-  moistureChartOptions: AgChartOptions | null = null;
-  salinityChartOptions: AgChartOptions | null = null;
-  phChartOptions: AgChartOptions | null = null;
-  npkChartOptions: AgChartOptions | null = null;
+  temperatureChartOptions: AgChartOptions = {};
+  moistureChartOptions: AgChartOptions = {};
+  salinityChartOptions: AgChartOptions = {};
+  phChartOptions: AgChartOptions = {};
+  npkChartOptions: AgChartOptions = {};
 
   constructor(public webService: WebService, private router: Router) {}
 
@@ -82,67 +63,6 @@ export class DataComponent implements OnInit {
     const ranges = ['day', 'week', 'month'];
     this.dateRange = ranges[index];
     this.updateChartDataBasedOnRange();
-  }
-
-  createGridOptions(data: SensorData[]) {
-    const statistics: StatisticsData = {
-      moisture: [],
-      temperature: [],
-      ec: [],
-      ph: [],
-      nitrogen: [],
-      phosphorus: [],
-      potassium: [],
-    };
-    data.forEach((d) => {
-      statistics.moisture.push(d.Body.moisture);
-      statistics.temperature.push(d.Body.temperature);
-      statistics.ec.push(d.Body.ec);
-      statistics.ph.push(d.Body.ph);
-      statistics.nitrogen.push(d.Body.nitrogen);
-      statistics.phosphorus.push(d.Body.phosphorus);
-      statistics.potassium.push(d.Body.potassium);
-    });
-
-    return Object.keys(statistics).map((key) => ({
-      condition: key,
-      ...this.calculateStatistics(statistics[key as keyof StatisticsData]),
-    }));
-  }
-
-  updateChartDataBasedOnRange() {
-    let data: any;
-    switch (this.dateRange) {
-      case 'day':
-        data = this.webService.dayData;
-        this.sensorData = data;
-        this.title = 'Daily';
-        break;
-      case 'week':
-        data = this.webService.weekData;
-        this.sensorData = data;
-        this.title = 'Weekly';
-        break;
-      case 'month':
-        data = this.webService.monthData;
-        this.sensorData = data;
-        this.title = 'Monthly';
-        break;
-    }
-    this.updateChartData(data);
-    this.rowData = this.createGridOptions(data);
-  }
-
-  private getTickInterval() {
-    switch (this.dateRange) {
-      case 'day':
-        return time.hour.every(3);
-      case 'week':
-        return time.day.every(1);
-      case 'month':
-        return time.day.every(3);
-    }
-    return 'day';
   }
 
   private updateChartData(data: SensorData[]) {
@@ -186,6 +106,34 @@ export class DataComponent implements OnInit {
       formattedData,
       tickInterval
     );
+  }
+
+  private updateGridOptions(data: SensorData[]) {
+    this.statisticsData = this.createGridOptions(data);
+    this.rowData = this.statisticsData;
+  }
+
+  updateChartDataBasedOnRange() {
+    let data: any;
+    switch (this.dateRange) {
+      case 'day':
+        data = this.webService.dayData;
+        this.sensorData = data;
+        this.title = 'Daily';
+        break;
+      case 'week':
+        data = this.webService.weekData;
+        this.sensorData = data;
+        this.title = 'Weekly';
+        break;
+      case 'month':
+        data = this.webService.monthData;
+        this.sensorData = data;
+        this.title = 'Monthly';
+        break;
+    }
+    this.updateChartData(data);
+    this.rowData = this.createGridOptions(data);
   }
 
   private createChartOptions(
@@ -281,9 +229,42 @@ export class DataComponent implements OnInit {
     };
   }
 
-  private updateGridOptions(data: SensorData[]) {
-    this.statisticsData = this.createGridOptions(data);
-    this.rowData = this.statisticsData;
+  createGridOptions(data: SensorData[]) {
+    const statistics: StatisticsData = {
+      moisture: [],
+      temperature: [],
+      ec: [],
+      ph: [],
+      nitrogen: [],
+      phosphorus: [],
+      potassium: [],
+    };
+    data.forEach((d) => {
+      statistics.moisture.push(d.Body.moisture);
+      statistics.temperature.push(d.Body.temperature);
+      statistics.ec.push(d.Body.ec);
+      statistics.ph.push(d.Body.ph);
+      statistics.nitrogen.push(d.Body.nitrogen);
+      statistics.phosphorus.push(d.Body.phosphorus);
+      statistics.potassium.push(d.Body.potassium);
+    });
+
+    return Object.keys(statistics).map((key) => ({
+      condition: key,
+      ...this.calculateStatistics(statistics[key as keyof StatisticsData]),
+    }));
+  }
+
+  private getTickInterval() {
+    switch (this.dateRange) {
+      case 'day':
+        return time.hour.every(3);
+      case 'week':
+        return time.day.every(1);
+      case 'month':
+        return time.day.every(3);
+    }
+    return 'day';
   }
 
   calculateStatistics(values: number[]) {
@@ -330,8 +311,21 @@ export class DataComponent implements OnInit {
     if (!this.sensorData || this.sensorData.length === 0) {
       return;
     }
+    const descriptions = [
+      'DateTime',
+      'Temperature (°C)',
+      'Moisture (%)',
+      'EC (µS/cm)',
+      'pH',
+      'Nitrogen (mg/kg)',
+      'Phosphorus (mg/kg)',
+      'Potassium (mg/kg)',
+    ];
+
+    const descriptionsRow = descriptions.join(',');
 
     const header = this.colDefs.map((colDef) => colDef.headerName).join(',');
+
     const rows = this.sensorData.map((row) => {
       return [
         row.Body.datetime,
@@ -344,7 +338,8 @@ export class DataComponent implements OnInit {
         row.Body.potassium,
       ].join(',');
     });
-    const csvContent = [header, ...rows].join('\r\n');
+
+    const csvContent = [descriptionsRow, header, ...rows].join('\r\n');
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     saveAs(blob, `${this.dateRange}_soil_sensor_data.csv`);

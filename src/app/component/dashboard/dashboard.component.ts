@@ -36,8 +36,8 @@ export class DashboardComponent implements OnInit {
   gauges = [
     { name: 'Temperature', key: 'temperature', unit: '°C', max: 60 },
     { name: 'Moisture', key: 'moisture', unit: '%', max: 100 },
-    { name: 'Salinity', key: 'ec', unit: 'µS/cm', max: 1200 },
-    { name: 'pH', key: 'ph', unit: 'PH', max: 14 },
+    { name: 'Salinity', key: 'ec', unit: 'µS/cm', max: 1500 },
+    { name: 'pH', key: 'ph', unit: 'pH', max: 14 },
     { name: 'Nitrogen', key: 'nitrogen', unit: 'mg/kg', max: 100 },
     { name: 'Phosphorus', key: 'phosphorus', unit: 'mg/kg', max: 300 },
     { name: 'Potassium', key: 'potassium', unit: 'mg/kg', max: 500 },
@@ -70,24 +70,11 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  loadCurrentWeather(lat: number, lng: number) {
-    this.webService.getCurrentWeather(lat, lng).subscribe({
-      next: (response: any) => {
-        this.currentWeather = response.currentWeather;
-        this.currentAstro = response.astroData.astronomy;
-        this.isWeatherLoaded = true;
-      },
-      error: (error) =>
-        console.error('Received invalid weather response:', error),
-    });
-  }
-
   handleLocationResponse(response: any) {
     const latitude = parseFloat(response.lat);
     const longitude = parseFloat(response.lng);
     sessionStorage.setItem('lat', latitude.toString());
     sessionStorage.setItem('lng', longitude.toString());
-    this.deviceID = this.decodedToken.deviceID
     this.mapCoordinates = { lat: latitude, lng: longitude };
     if (!isNaN(latitude) && !isNaN(longitude)) {
       this.updateMapLocation(latitude, longitude);
@@ -100,6 +87,19 @@ export class DashboardComponent implements OnInit {
     this.markerPosition = this.mapCenter;
     this.updateCurrentPosition();
     this.isLocationLoaded = true;
+  }
+
+
+  loadCurrentWeather(lat: number, lng: number) {
+    this.webService.getCurrentWeather(lat, lng).subscribe({
+      next: (response: any) => {
+        this.currentWeather = response.currentWeather;
+        this.currentAstro = response.astroData.astronomy;
+        this.isWeatherLoaded = true;
+      },
+      error: (error) =>
+        console.error('Received invalid weather response:', error),
+    });
   }
 
   updateCurrentPosition() {
