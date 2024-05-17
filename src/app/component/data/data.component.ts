@@ -108,6 +108,122 @@ export class DataComponent implements OnInit {
     );
   }
 
+  createGridOptions(data: SensorData[]) {
+    const statistics: StatisticsData = {
+      moisture: [],
+      temperature: [],
+      ec: [],
+      ph: [],
+      nitrogen: [],
+      phosphorus: [],
+      potassium: [],
+    };
+    data.forEach((d) => {
+      statistics.moisture.push(d.Body.moisture);
+      statistics.temperature.push(d.Body.temperature);
+      statistics.ec.push(d.Body.ec);
+      statistics.ph.push(d.Body.ph);
+      statistics.nitrogen.push(d.Body.nitrogen);
+      statistics.phosphorus.push(d.Body.phosphorus);
+      statistics.potassium.push(d.Body.potassium);
+    });
+
+    return Object.keys(statistics).map((key) => ({
+      condition: key,
+      ...this.calculateStatistics(statistics[key as keyof StatisticsData]),
+    }));
+  }
+
+  calculateStatistics(values: number[]) {
+    if (values.length === 0) {
+      return {
+        average: 'N/A',
+        standardDeviation: 'N/A',
+        median: 'N/A',
+        minValue: 'N/A',
+        maxValue: 'N/A',
+        percentile25: 'N/A',
+        percentile75: 'N/A',
+      };
+    }
+  
+    values.sort((a, b) => a - b);
+  
+    const sum = values.reduce((accumulator, value) => accumulator + value, 0);
+    const numberOfValues = values.length;
+    const average = sum / numberOfValues;
+  
+    const middleIndex = Math.floor(numberOfValues / 2);
+    const median =
+      numberOfValues % 2 !== 0
+        ? values[middleIndex]
+        : (values[middleIndex - 1] + values[middleIndex]) / 2;
+  
+    const minValue = values[0];
+    const maxValue = values[numberOfValues - 1];
+  
+    const percentile25Index = Math.floor(0.25 * numberOfValues);
+    const percentile25 = values[percentile25Index];
+  
+    const percentile75Index = Math.floor(0.75 * numberOfValues);
+    const percentile75 = values[percentile75Index];
+  
+    const sumOfSquaredDifferences = values.reduce(
+      (accumulator, value) => accumulator + (value - average) ** 2,
+      0
+    );
+    const variance = sumOfSquaredDifferences / numberOfValues;
+    const standardDeviation = Math.sqrt(variance);
+  
+    return {
+      average: average.toFixed(2),
+      standardDeviation: standardDeviation.toFixed(2),
+      median: median.toFixed(2),
+      minValue: minValue.toFixed(2),
+      maxValue: maxValue.toFixed(2),
+      percentile25: percentile25.toFixed(2),
+      percentile75: percentile75.toFixed(2),
+    };
+  }
+  
+  exportToCsv() {
+    if (!this.sensorData || this.sensorData.length === 0) {
+      return;
+    }
+    const descriptions = [
+      'DateTime',
+      'Temperature (°C)',
+      'Moisture (%)',
+      'EC (µS/cm)',
+      'pH',
+      'Nitrogen (mg/kg)',
+      'Phosphorus (mg/kg)',
+      'Potassium (mg/kg)',
+    ];
+
+    const descriptionsRow = descriptions.join(',');
+
+    const header = this.colDefs.map((colDef) => colDef.headerName).join(',');
+
+    const rows = this.sensorData.map((row) => {
+      return [
+        row.Body.datetime,
+        row.Body.temperature,
+        row.Body.moisture,
+        row.Body.ec,
+        row.Body.ph,
+        row.Body.nitrogen,
+        row.Body.phosphorus,
+        row.Body.potassium,
+      ].join(',');
+    });
+
+    const csvContent = [descriptionsRow, header, ...rows].join('\r\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    saveAs(blob, `${this.dateRange}_soil_sensor_data.csv`);
+  }
+
   private updateGridOptions(data: SensorData[]) {
     this.statisticsData = this.createGridOptions(data);
     this.rowData = this.statisticsData;
@@ -229,32 +345,6 @@ export class DataComponent implements OnInit {
     };
   }
 
-  createGridOptions(data: SensorData[]) {
-    const statistics: StatisticsData = {
-      moisture: [],
-      temperature: [],
-      ec: [],
-      ph: [],
-      nitrogen: [],
-      phosphorus: [],
-      potassium: [],
-    };
-    data.forEach((d) => {
-      statistics.moisture.push(d.Body.moisture);
-      statistics.temperature.push(d.Body.temperature);
-      statistics.ec.push(d.Body.ec);
-      statistics.ph.push(d.Body.ph);
-      statistics.nitrogen.push(d.Body.nitrogen);
-      statistics.phosphorus.push(d.Body.phosphorus);
-      statistics.potassium.push(d.Body.potassium);
-    });
-
-    return Object.keys(statistics).map((key) => ({
-      condition: key,
-      ...this.calculateStatistics(statistics[key as keyof StatisticsData]),
-    }));
-  }
-
   private getTickInterval() {
     switch (this.dateRange) {
       case 'day':
@@ -267,81 +357,4 @@ export class DataComponent implements OnInit {
     return 'day';
   }
 
-  calculateStatistics(values: number[]) {
-    if (values.length === 0) {
-      return {
-        average: 'N/A',
-        standardDeviation: 'N/A',
-        median: 'N/A',
-        minValue: 'N/A',
-        maxValue: 'N/A',
-        percentile25: 'N/A',
-        percentile75: 'N/A',
-      };
-    }
-
-    values.sort((a, b) => a - b);
-    const average = values.reduce((sum, val) => sum + val, 0) / values.length;
-    const mid = Math.floor(values.length / 2);
-    const median =
-      values.length % 2 !== 0
-        ? values[mid]
-        : (values[mid - 1] + values[mid]) / 2;
-    const min = values[0];
-    const max = values[values.length - 1];
-    const percentile25 = values[Math.floor(0.25 * values.length)];
-    const percentile75 = values[Math.floor(0.75 * values.length)];
-    const variance =
-      values.reduce((acc, val) => acc + (val - average) ** 2, 0) /
-      values.length;
-    const standardDeviation = Math.sqrt(variance);
-
-    return {
-      average: average.toFixed(2),
-      standardDeviation: standardDeviation.toFixed(2),
-      median: median.toFixed(2),
-      minValue: min.toFixed(2),
-      maxValue: max.toFixed(2),
-      percentile25: percentile25.toFixed(2),
-      percentile75: percentile75.toFixed(2),
-    };
-  }
-
-  exportToCsv() {
-    if (!this.sensorData || this.sensorData.length === 0) {
-      return;
-    }
-    const descriptions = [
-      'DateTime',
-      'Temperature (°C)',
-      'Moisture (%)',
-      'EC (µS/cm)',
-      'pH',
-      'Nitrogen (mg/kg)',
-      'Phosphorus (mg/kg)',
-      'Potassium (mg/kg)',
-    ];
-
-    const descriptionsRow = descriptions.join(',');
-
-    const header = this.colDefs.map((colDef) => colDef.headerName).join(',');
-
-    const rows = this.sensorData.map((row) => {
-      return [
-        row.Body.datetime,
-        row.Body.temperature,
-        row.Body.moisture,
-        row.Body.ec,
-        row.Body.ph,
-        row.Body.nitrogen,
-        row.Body.phosphorus,
-        row.Body.potassium,
-      ].join(',');
-    });
-
-    const csvContent = [descriptionsRow, header, ...rows].join('\r\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    saveAs(blob, `${this.dateRange}_soil_sensor_data.csv`);
-  }
 }
