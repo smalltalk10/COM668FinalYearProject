@@ -107,10 +107,6 @@ export class ThresholdModalComponent implements OnInit {
     });
   }
 
-  handleSliderChange(event: any, condition: any): void {
-    condition.currentValue = event.value;
-  }
-
   onSubmitCreateThreshold() {
     if (this.thresholdForm.valid) {
       this.webService
@@ -143,15 +139,6 @@ export class ThresholdModalComponent implements OnInit {
       });
   }
 
-  handleActiveToggle(id: string, isActive: boolean) {
-    this.webService.activateThreshold(id, isActive).subscribe({
-      next: () => {
-        this.fetchGrid();
-      },
-      error: (error) => console.error('Failed to toggle active state:', error),
-    });
-  }
-
   onSubmitDeleteThreshold() {
     const modalRef = this.modalService.open(this.confirmationModal!, { centered: true });
   
@@ -175,10 +162,19 @@ export class ThresholdModalComponent implements OnInit {
     });
   }
 
-  onGridReady(params: GridReadyEvent) {
-    this.gridApi = params.api;
-    this.gridApi.setGridOption('rowData', this.rowData);
+  handleActiveToggle(id: string, isActive: boolean) {
+    this.webService.activateThreshold(id, isActive).subscribe({
+      next: () => {
+        this.fetchGrid();
+      },
+      error: (error) => console.error('Failed to toggle active state:', error),
+    });
   }
+
+  handleSliderChange(event: any, condition: any): void {
+    condition.currentValue = event.value;
+  }
+
 
   public rowSelection: any = 'single';
   onSelectionChanged(event: any) {
@@ -188,7 +184,7 @@ export class ThresholdModalComponent implements OnInit {
       const updatedConditions = this.thresholdParameters.map(
         (condition: any) => {
           const mapping: any = this.conditionsMapping.find(
-            (m) => m.name === condition.name
+            (eachCondition) => eachCondition.name === condition.name
           );
           return {
             ...condition,
@@ -207,6 +203,11 @@ export class ThresholdModalComponent implements OnInit {
       };
       this.thresholdForm.get('name').setValue('');
     }
+  }
+  
+  onGridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+    this.gridApi.setGridOption('rowData', this.rowData);
   }
 
   nameInvalid(): boolean {
