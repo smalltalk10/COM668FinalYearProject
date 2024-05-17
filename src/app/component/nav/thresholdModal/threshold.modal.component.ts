@@ -107,6 +107,11 @@ export class ThresholdModalComponent implements OnInit {
     });
   }
 
+  onGridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+    this.gridApi.setGridOption('rowData', this.rowData);
+  }
+
   handleSliderChange(event: any, condition: any): void {
     condition.currentValue = event.value;
   }
@@ -122,7 +127,6 @@ export class ThresholdModalComponent implements OnInit {
       (document.getElementById('filter-text-box') as HTMLInputElement).value
     );
   }
-
 
   onSubmitCreateThreshold() {
     if (this.thresholdForm.valid) {
@@ -217,11 +221,6 @@ export class ThresholdModalComponent implements OnInit {
       };
       this.thresholdForm.get('name').setValue('');
     }
-  }
-  
-  onGridReady(params: GridReadyEvent) {
-    this.gridApi = params.api;
-    this.gridApi.setGridOption('rowData', this.rowData);
   }
 
   formatLabel(value: number): string {
