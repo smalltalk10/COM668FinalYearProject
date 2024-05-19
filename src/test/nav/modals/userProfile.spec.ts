@@ -3,6 +3,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { UserProfileModalComponent } from '../../../app/component/nav/userProfileModal/userProfile.modal.component';
 import { WebService } from '../../../app/web.service';
@@ -14,6 +15,7 @@ describe('UserProfileModalComponent', () => {
   let activeModalMock: Partial<NgbActiveModal>;
   let formBuilderMock: Partial<any>;
   let routerMock: Partial<Router>;
+  let modalServiceMock: Partial<NgbModal>;
 
   beforeEach(async () => {
     const validToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
@@ -41,6 +43,12 @@ describe('UserProfileModalComponent', () => {
     activeModalMock = {
       dismiss: jest.fn(),
     };
+
+    modalServiceMock = {
+      open: jest.fn().mockReturnValue({
+        result: Promise.resolve('delete'),
+      }),
+    }
 
     formBuilderMock = {
       group: jest.fn(() => ({
@@ -80,14 +88,14 @@ describe('UserProfileModalComponent', () => {
         { provide: NgbActiveModal, useValue: activeModalMock },
         { provide: FormBuilder, useValue: formBuilderMock },
         { provide: Router, useValue: routerMock },
+        { provide: NgbModal, useValue: modalServiceMock },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserProfileModalComponent);
     component = fixture.componentInstance;
-
     component.decodedToken = { userID: '123', username: 'testUser' };
-
+    component.confirmationModal = {} as any;
     fixture.detectChanges();
   });
 
@@ -159,25 +167,17 @@ describe('UserProfileModalComponent', () => {
     expect(component.errorMessage).toBe('Error message');
   });
 
-  it('should submit delete profile', () => {
-    component.decodedToken = { userID: '123' };
-    component.passwordIsValid = true;
-    sessionStorage.setItem('token', 'some_token');
-    const response = 'success';
-    const deleteUserSpy = jest
-      .spyOn(webServiceMock, 'deleteUser')
-      .mockReturnValue(of(response));
-
-    component.deleteProfile();
-
-    expect(deleteUserSpy).toHaveBeenCalledWith('123');
-    expect(sessionStorage.setItem).toHaveBeenCalledWith('token', '');
-    expect(activeModalMock.dismiss).toHaveBeenCalled();
-    expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/');
+  it('should open confirmation modal and delete profile', async () => {
+    component.decodedToken = { userID: '123', username: 'testUser' }; // Set the decodedToken property
+  
+    await component.onSubmitDeleteProfile();
+  
+    expect(modalServiceMock.open).toHaveBeenCalledWith(component.confirmationModal, { centered: true });
+    expect(webServiceMock.deleteUser).toHaveBeenCalledWith('123');
   });
 
+
   it('should handle delete profile error', () => {
-    component.passwordIsValid = true;
     const error = 'Error deleting profile';
     jest.spyOn(webServiceMock, 'deleteUser').mockReturnValue(throwError(error));
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();

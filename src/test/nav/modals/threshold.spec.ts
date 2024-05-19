@@ -102,7 +102,7 @@ describe('ThresholdModalComponent', () => {
   it('should handle active toggle', () => {
     const id = '123';
     const isActive = true;
-    component.handleActiveToggle(id, isActive);
+    component.onHandleActiveToggle(id, isActive);
     expect(webServiceMock.activateThreshold).toHaveBeenCalledWith(id, isActive);
   });
 
@@ -266,7 +266,7 @@ describe('ThresholdModalComponent', () => {
   
     webServiceMock.activateThreshold.mockReturnValue(throwError('API error'));
 
-    component.handleActiveToggle(id, isActive);
+    component.onHandleActiveToggle(id, isActive);
   
     expect(webServiceMock.activateThreshold).toHaveBeenCalledWith(id, isActive);
   });

@@ -16,7 +16,8 @@ module.exports = {
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
     '!src/main.ts',
-    '!src/app/app.module.ts'
+    '!src/app/app.module.ts',
+    '!src/app/app.component.ts',
   ],
   coverageDirectory: 'coverage',
   coverageReporters: ['html', 'text', 'lcov'],

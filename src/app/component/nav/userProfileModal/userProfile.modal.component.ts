@@ -69,10 +69,6 @@ export class UserProfileModalComponent {
     this.emailIsValid = this.editForm.controls.email.valid;
   }
 
-  updatePasswordValidity() {
-    this.passwordIsValid = this.editForm.controls.password.valid;
-  }
-
   isInvalid(controlName: string): boolean {
     const control = this.editForm.get(controlName);
     return control.touched && control.invalid;
@@ -90,10 +86,6 @@ export class UserProfileModalComponent {
           sessionStorage.setItem('token', response.token);
           this.editForm.reset();
           setTimeout(() => {
-            const updatedToken = sessionStorage.getItem('token')!;
-            this.cd.detectChanges();
-            this.decodedToken = jwtDecode(updatedToken);
-            this.errorMessage = '';
           }, 1);
         },
         error: (error: any) => {
@@ -117,11 +109,7 @@ export class UserProfileModalComponent {
 
   deleteProfile() {
     this.webService.deleteUser(this.decodedToken.userID).subscribe({
-      next: (response) => {
-        sessionStorage.setItem('token', '');
-        this.closeModal();
-        this.router.navigateByUrl('/');
-      },
+      next: (response) => {},
       error: (error) => {
         console.error('HTTP error:', error);
         this.errorMessage = 'Failed to delete profile. Please try again.';
