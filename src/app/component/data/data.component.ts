@@ -53,8 +53,8 @@ export class DataComponent implements OnInit {
       .getAllDateRangeMeasurements()
       .subscribe((data: SensorData[]) => {
         this.sensorData = data;
-        this.updateChartData(data);
-        this.updateGridOptions(data);
+        this.updateChartData(this.sensorData);
+        this.updateGridOptions(this.sensorData);
         this.updateChartDataBasedOnRange();
       });
   }
@@ -108,6 +108,99 @@ export class DataComponent implements OnInit {
     );
   }
 
+  private createChartOptions(
+    sensordata: any[],
+    yKey: string,
+    title: string,
+    tickInterval: any
+  ): AgChartOptions {
+    return {
+      autoSize: true,
+      height: 290,
+      data: sensordata,
+      series: [
+        {
+          type: 'line',
+          xKey: 'datetime',
+          yKey: yKey,
+          marker: { enabled: false },
+        },
+      ],
+      axes: [
+        {
+          type: 'time',
+          position: 'bottom',
+          tick: {
+            interval: tickInterval,
+          },
+          title: { text: 'Time' },
+        },
+        {
+          type: 'number',
+          position: 'left',
+          title: { text: title },
+          label: {
+            format: '#{.1f}',
+          },
+        },
+      ],
+      legend: { enabled: true, position: 'top' },
+    };
+  }
+
+  private createNpkChartOptions(
+    data: any[],
+    tickInterval: any
+  ): AgChartOptions {
+    return {
+      autoSize: true,
+      height: 290,
+      data: data,
+      series: [
+        {
+          type: 'line',
+          xKey: 'datetime',
+          yKey: 'nitrogen',
+          yName: 'Nitrogen',
+          marker: { enabled: false },
+        },
+        {
+          type: 'line',
+          xKey: 'datetime',
+          yKey: 'phosphorus',
+          yName: 'Phosphorus',
+          marker: { enabled: false },
+        },
+        {
+          type: 'line',
+          xKey: 'datetime',
+          yKey: 'potassium',
+          yName: 'Potassium',
+          marker: { enabled: false },
+        },
+      ],
+      axes: [
+        {
+          type: 'time',
+          position: 'bottom',
+          tick: {
+            interval: tickInterval,
+          },
+          title: { text: 'Time' },
+        },
+        {
+          type: 'number',
+          position: 'left',
+          title: { text: 'Milligrams per Kilogram (mg/kg)' },
+          label: {
+            format: '#{.1f}',
+          },
+        },
+      ],
+      legend: { enabled: true, position: 'top' },
+    };
+  }
+
   createGridOptions(data: SensorData[]) {
     const statistics: StatisticsData = {
       moisture: [],
@@ -118,14 +211,14 @@ export class DataComponent implements OnInit {
       phosphorus: [],
       potassium: [],
     };
-    data.forEach((d) => {
-      statistics.moisture.push(d.Body.moisture);
-      statistics.temperature.push(d.Body.temperature);
-      statistics.ec.push(d.Body.ec);
-      statistics.ph.push(d.Body.ph);
-      statistics.nitrogen.push(d.Body.nitrogen);
-      statistics.phosphorus.push(d.Body.phosphorus);
-      statistics.potassium.push(d.Body.potassium);
+    data.forEach((measurement) => {
+      statistics.moisture.push(measurement.Body.moisture);
+      statistics.temperature.push(measurement.Body.temperature);
+      statistics.ec.push(measurement.Body.ec);
+      statistics.ph.push(measurement.Body.ph);
+      statistics.nitrogen.push(measurement.Body.nitrogen);
+      statistics.phosphorus.push(measurement.Body.phosphorus);
+      statistics.potassium.push(measurement.Body.potassium);
     });
 
     return Object.keys(statistics).map((key) => ({
@@ -134,7 +227,7 @@ export class DataComponent implements OnInit {
     }));
   }
 
-  calculateStatistics(values: number[]) {
+  calculateStatistics(values: number[]): any {
     if (values.length === 0) {
       return {
         average: 'N/A',
@@ -148,41 +241,29 @@ export class DataComponent implements OnInit {
     }
   
     values.sort((a, b) => a - b);
+    const len = values.length;
+    const sum = values.reduce((a, b) => a + b);
+    const avg = sum / len;
   
-    const sum = values.reduce((accumulator, value) => accumulator + value, 0);
-    const numberOfValues = values.length;
-    const average = sum / numberOfValues;
+    const mid = Math.floor(len / 2);
+    const median = len % 2 !== 0 ? values[mid] : (values[mid - 1] + values[mid]) / 2;
   
-    const middleIndex = Math.floor(numberOfValues / 2);
-    const median =
-      numberOfValues % 2 !== 0
-        ? values[middleIndex]
-        : (values[middleIndex - 1] + values[middleIndex]) / 2;
+    const min = values[0];
+    const max = values[len - 1];
+    const p25 = values[Math.floor(0.25 * len)];
+    const p75 = values[Math.floor(0.75 * len)];
   
-    const minValue = values[0];
-    const maxValue = values[numberOfValues - 1];
-  
-    const percentile25Index = Math.floor(0.25 * numberOfValues);
-    const percentile25 = values[percentile25Index];
-  
-    const percentile75Index = Math.floor(0.75 * numberOfValues);
-    const percentile75 = values[percentile75Index];
-  
-    const sumOfSquaredDifferences = values.reduce(
-      (accumulator, value) => accumulator + (value - average) ** 2,
-      0
-    );
-    const variance = sumOfSquaredDifferences / numberOfValues;
-    const standardDeviation = Math.sqrt(variance);
+    const sqDiffs = values.map(value => (value - avg) ** 2);
+    const stdDev = Math.sqrt(sqDiffs.reduce((a, b) => a + b) / len);
   
     return {
-      average: average.toFixed(2),
-      standardDeviation: standardDeviation.toFixed(2),
+      average: avg.toFixed(2),
+      standardDeviation: stdDev.toFixed(2),
       median: median.toFixed(2),
-      minValue: minValue.toFixed(2),
-      maxValue: maxValue.toFixed(2),
-      percentile25: percentile25.toFixed(2),
-      percentile75: percentile75.toFixed(2),
+      minValue: min.toFixed(2),
+      maxValue: max.toFixed(2),
+      percentile25: p25.toFixed(2),
+      percentile75: p75.toFixed(2),
     };
   }
   
@@ -252,98 +333,6 @@ export class DataComponent implements OnInit {
     this.rowData = this.createGridOptions(data);
   }
 
-  private createChartOptions(
-    data: any[],
-    yKey: string,
-    format: string,
-    tickInterval: any
-  ): AgChartOptions {
-    return {
-      autoSize: true,
-      height: 290,
-      data: data,
-      series: [
-        {
-          type: 'line',
-          xKey: 'datetime',
-          yKey: yKey,
-          marker: { enabled: false },
-        },
-      ],
-      axes: [
-        {
-          type: 'time',
-          position: 'bottom',
-          tick: {
-            interval: tickInterval,
-          },
-          title: { text: 'Time' },
-        },
-        {
-          type: 'number',
-          position: 'left',
-          title: { text: format },
-          label: {
-            format: '#{.1f}',
-          },
-        },
-      ],
-      legend: { enabled: true, position: 'top' },
-    };
-  }
-
-  private createNpkChartOptions(
-    data: any[],
-    tickInterval: any
-  ): AgChartOptions {
-    return {
-      autoSize: true,
-      height: 290,
-      data: data,
-      series: [
-        {
-          type: 'line',
-          xKey: 'datetime',
-          yKey: 'nitrogen',
-          yName: 'Nitrogen',
-          marker: { enabled: false },
-        },
-        {
-          type: 'line',
-          xKey: 'datetime',
-          yKey: 'phosphorus',
-          yName: 'Phosphorus',
-          marker: { enabled: false },
-        },
-        {
-          type: 'line',
-          xKey: 'datetime',
-          yKey: 'potassium',
-          yName: 'Potassium',
-          marker: { enabled: false },
-        },
-      ],
-      axes: [
-        {
-          type: 'time',
-          position: 'bottom',
-          tick: {
-            interval: tickInterval,
-          },
-          title: { text: 'Time' },
-        },
-        {
-          type: 'number',
-          position: 'left',
-          title: { text: 'Milligrams per Kilogram (mg/kg)' },
-          label: {
-            format: '#{.1f}',
-          },
-        },
-      ],
-      legend: { enabled: true, position: 'top' },
-    };
-  }
 
   private getTickInterval() {
     switch (this.dateRange) {
@@ -356,5 +345,4 @@ export class DataComponent implements OnInit {
     }
     return 'day';
   }
-
 }

@@ -31,7 +31,6 @@ export class ThresholdModalComponent implements OnInit {
   decodedToken: any;
   thresholdParameters = DefaultThresholds.thresholds;
   conditionsMapping = conditionsMapping;
-
   gridApi!: GridApi;
   rowData: Threshold[] = [];
 
@@ -59,7 +58,7 @@ export class ThresholdModalComponent implements OnInit {
       width: 250,
       cellRendererParams: {
         onClick: (id: string, isActive: boolean) =>
-          this.handleActiveToggle(id, isActive),
+          this.onHandleActiveToggle(id, isActive),
       },
     },
   ];
@@ -67,7 +66,7 @@ export class ThresholdModalComponent implements OnInit {
   autoSizeStrategy: any = {
     type: 'fitGridWidth',
   };
-  
+
   constructor(
     public activeModal: NgbActiveModal,
     public webService: WebService,
@@ -76,7 +75,9 @@ export class ThresholdModalComponent implements OnInit {
     private modalService: NgbModal
   ) {}
 
-  @ViewChild('confirmationModal', { static: true }) confirmationModal: TemplateRef<any> | undefined;
+  @ViewChild('confirmationModal', { static: true }) confirmationModal:
+    | TemplateRef<any>
+    | undefined;
   ngOnInit(): void {
     const token = sessionStorage.getItem('token');
     if (token) {
@@ -107,27 +108,6 @@ export class ThresholdModalComponent implements OnInit {
     });
   }
 
-  onGridReady(params: GridReadyEvent) {
-    this.gridApi = params.api;
-    this.gridApi.setGridOption('rowData', this.rowData);
-  }
-
-  handleSliderChange(event: any, condition: any): void {
-    condition.currentValue = event.value;
-  }
-
-  nameInvalid(): boolean {
-    const control = this.thresholdForm.get('name');
-    return control.invalid && (control.dirty || this.thresholdForm.untouched);
-  }
-
-  onFilterTextBoxChanged() {
-    this.gridApi.setGridOption(
-      'quickFilterText',
-      (document.getElementById('filter-text-box') as HTMLInputElement).value
-    );
-  }
-
   onSubmitCreateThreshold() {
     if (this.thresholdForm.valid) {
       this.webService
@@ -144,32 +124,34 @@ export class ThresholdModalComponent implements OnInit {
   }
 
   onSubmitUpdateThreshold() {
-    this.webService
-      .updateThreshold(
-        this.selectedThreshold.id,
-        this.thresholdForm.value,
-        this.selectedThreshold.selectedConditions
-      )
-      .subscribe({
-        next: () => {
-          this.fetchGrid();
-        },
-        error: (error) => {
-          console.error('HTTP error:', error);
-        },
-      });
+    if (this.thresholdForm.valid) {
+      this.webService
+        .updateThreshold(
+          this.selectedThreshold.id,
+          this.thresholdForm.value,
+          this.selectedThreshold.selectedConditions
+        )
+        .subscribe({
+          next: () => {
+            this.fetchGrid();
+          },
+          error: (error) => {
+            console.error('HTTP error:', error);
+          },
+        });
+    }
   }
 
   onSubmitDeleteThreshold() {
-    const modalRef = this.modalService.open(this.confirmationModal!, { centered: true });
-  
-    modalRef.result.then(
-      (result) => {
-        if (result === 'delete') {
-          this.deleteThreshold();
-        }
-      },
-    )
+    const modalRef = this.modalService.open(this.confirmationModal!, {
+      centered: true,
+    });
+
+    modalRef.result.then((result) => {
+      if (result === 'delete') {
+        this.deleteThreshold();
+      }
+    });
   }
 
   deleteThreshold() {
@@ -183,7 +165,7 @@ export class ThresholdModalComponent implements OnInit {
     });
   }
 
-  handleActiveToggle(id: string, isActive: boolean) {
+  onHandleActiveToggle(id: string, isActive: boolean) {
     this.webService.activateThreshold(id, isActive).subscribe({
       next: () => {
         this.fetchGrid();
@@ -192,7 +174,10 @@ export class ThresholdModalComponent implements OnInit {
     });
   }
 
-
+  onGridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+    this.gridApi.setGridOption('rowData', this.rowData);
+  }
 
   public rowSelection: any = 'single';
   onSelectionChanged(event: any) {
@@ -221,6 +206,22 @@ export class ThresholdModalComponent implements OnInit {
       };
       this.thresholdForm.get('name').setValue('');
     }
+  }
+
+  handleSliderChange(event: any, condition: any): void {
+    condition.currentValue = event.value;
+  }
+
+  nameInvalid(): boolean {
+    const control = this.thresholdForm.get('name');
+    return control.invalid && (control.dirty || this.thresholdForm.untouched);
+  }
+
+  onFilterTextBoxChanged() {
+    this.gridApi.setGridOption(
+      'quickFilterText',
+      (document.getElementById('filter-text-box') as HTMLInputElement).value
+    );
   }
 
   formatLabel(value: number): string {
