@@ -10,7 +10,7 @@ describe('ForecastComponent', () => {
   let fixture: ComponentFixture<ForecastComponent>;
   let webServiceMock: jest.Mocked<WebService>;
   let router: jest.Mocked<Router>;
-  let consoleSpy: jest.SpyInstance; // Declare a spy instance for console.error
+  let consoleSpy: jest.SpyInstance;
 
   beforeEach(async () => {
     webServiceMock = {
@@ -34,8 +34,7 @@ describe('ForecastComponent', () => {
       navigateByUrl: jest.fn(),
     } as any;
 
-    consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {}); // Mock console.error
-
+    consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     await TestBed.configureTestingModule({
       declarations: [ForecastComponent],
       imports: [RouterTestingModule],
@@ -50,8 +49,8 @@ describe('ForecastComponent', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks(); // Clear all mocks after each test
-    consoleSpy.mockRestore(); // Restore the original implementation of console.error
+    jest.clearAllMocks();
+    consoleSpy.mockRestore();
   });
   it('should create', () => {
     expect(component).toBeTruthy();

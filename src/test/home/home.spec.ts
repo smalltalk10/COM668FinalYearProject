@@ -179,7 +179,6 @@ describe('HomeComponent', () => {
     component.registerEmailIsValid = true;
     component.onSubmitUserRegister();
   
-    // Modify the expectation to target the spy function
     expect(webServiceMock.createUser).toHaveBeenCalledWith(registerFormValue);
     expect(component.errorMessage).toBe('');
   });
@@ -207,7 +206,7 @@ describe('HomeComponent', () => {
       username: 'testUser',
       password: 'testPassword',
     };
-    const error = {}; // No error message provided
+    const error = {};
     jest.spyOn(webServiceMock, 'login').mockReturnValue(throwError(error));
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
   

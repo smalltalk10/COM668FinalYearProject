@@ -71,6 +71,8 @@ export class DashboardComponent implements OnInit {
   }
 
   handleLocationResponse(response: any) {
+    sessionStorage.setItem('lat', response.lat);
+    sessionStorage.setItem('lng', response.lng);
     const latitude = parseFloat(response.lat);
     const longitude = parseFloat(response.lng);
     this.mapCoordinates = { lat: latitude, lng: longitude };
@@ -101,7 +103,7 @@ export class DashboardComponent implements OnInit {
 
   updateCurrentPosition() {
     if (this.markerPosition) {
-      this.currentPosition = `deviceID: ${this.deviceID}, Lat: ${this.markerPosition.lat} Lng: ${this.markerPosition.lng}`;
+      this.currentPosition = `deviceID: ${this.decodedToken.deviceID}, Lat: ${this.markerPosition.lat} Lng: ${this.markerPosition.lng}`;
     }
   }
   
@@ -120,7 +122,7 @@ export class DashboardComponent implements OnInit {
   }
 
   onSubmitUpdateLocation() {
-    this.webService.updateLocation(this.deviceID, this.markerPosition).subscribe({
+    this.webService.updateLocation(this.decodedToken.deviceID, this.markerPosition).subscribe({
       next: () => this.loadLocation(),
       error: (error) => console.error('HTTP error:', error),
     });

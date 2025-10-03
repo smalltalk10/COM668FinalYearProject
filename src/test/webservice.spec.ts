@@ -126,7 +126,6 @@ describe('WebService', () => {
     const weekData = { data: 'week data' };
     const monthData = { data: 'month data' };
 
-    // Mock the getDateRangeMeasurements method
     const getDateRangeMeasurementsSpy = jest
       .spyOn(service, 'getDateRangeMeasurements')
       .mockImplementation((range) => {
@@ -142,16 +141,13 @@ describe('WebService', () => {
         }
       });
 
-    // Execute the function
     service.getAllDateRangeMeasurements().subscribe();
 
-    // Verify the mock calls
     expect(getDateRangeMeasurementsSpy).toHaveBeenCalledTimes(3);
     expect(getDateRangeMeasurementsSpy).toHaveBeenCalledWith('day');
     expect(getDateRangeMeasurementsSpy).toHaveBeenCalledWith('week');
     expect(getDateRangeMeasurementsSpy).toHaveBeenCalledWith('month');
 
-    // Verify internal state changes
     expect(service.dayData).toEqual(dayData);
     expect(service.weekData).toEqual(weekData);
     expect(service.monthData).toEqual(monthData);

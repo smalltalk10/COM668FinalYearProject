@@ -1,11 +1,9 @@
 @import '@angular/material/theming';
 
-// Define your color palettes
 $primary: mat-palette($mat-green);
 $accent: mat-palette($mat-light-green, A200, A100, A400);
 $warn: mat-palette($mat-red);
 
-// Define a theme object
 $theme: mat-light-theme(
   $primary,
   $accent,
@@ -13,12 +11,10 @@ $theme: mat-light-theme(
 );
 
 .custom-large-modal .modal-dialog {
-  max-width: 80% !important; /* Increase width and use !important to override default styles */
-  min-width: 800px !important; /* Set a minimum width if necessary */
+  max-width: 80% !important;
+  min-width: 800px !important;
 }
 
-// Include base styles for common typographic elements
 @include mat-core();
 
-// Include all theme styles for the components
 @include angular-material-theme($theme);

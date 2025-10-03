@@ -168,7 +168,7 @@ describe('UserProfileModalComponent', () => {
   });
 
   it('should open confirmation modal and delete profile', async () => {
-    component.decodedToken = { userID: '123', username: 'testUser' }; // Set the decodedToken property
+    component.decodedToken = { userID: '123', username: 'testUser' };
   
     await component.onSubmitDeleteProfile();
   

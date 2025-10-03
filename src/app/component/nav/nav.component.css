@@ -8,15 +8,14 @@
 }
 
 .nav-item .nav-link {
-    color: #bbbaba; /* Default color for unselected tabs */
-    font-family: 'Roboto', sans-serif; /* Modern font */
+    color: #bbbaba;
+    font-family: 'Roboto', sans-serif;
 }
 
 .nav-item .nav-link.active {
-    color: #ffffff; /* Color for selected tab */
+    color: #ffffff;
 }
 
-/* Optional: Change hover color */
 .nav-item .nav-link:hover {
-    color: #ffffff; /* Hover color */
+    color: #ffffff;
 }

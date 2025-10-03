@@ -8,7 +8,6 @@ describe('ActiveBtnCellRendererComponent', () => {
   let changeDetectorRefMock: jest.Mocked<ChangeDetectorRef>;
 
   beforeEach(async () => {
-    // Initialize the mock
     changeDetectorRefMock = {
       detectChanges: jest.fn(),
     } as unknown as jest.Mocked<ChangeDetectorRef>;
@@ -20,7 +19,7 @@ describe('ActiveBtnCellRendererComponent', () => {
 
     fixture = TestBed.createComponent(ActiveBtnCellRendererComponent);
     component = fixture.componentInstance;
-    component.params = { value: 'false', data: { id: 123 }, onClick: jest.fn() }; // Initialize params
+    component.params = { value: 'false', data: { id: 123 }, onClick: jest.fn() };
     fixture.detectChanges();
   });
 

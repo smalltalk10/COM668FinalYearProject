@@ -46,14 +46,13 @@
 }
 
 .online, .status-details .online {
-    color: #4CAF50; /* Brighter green for better visibility */
+    color: #4CAF50;
 }
 
 .offline, .status-details .offline {
-    color: #F44336; /* Brighter red for better visibility */
+    color: #F44336;
 }
 
-/* Enhancements for better readability */
 p {
     margin: 5px 0;
     font-size: 14px;

@@ -108,7 +108,7 @@ export class WebService {
     const urlCurrent = `http://api.weatherapi.com/v1/current.json`;
     const urlAstro = `http://api.weatherapi.com/v1/astronomy.json`;
     const params = {
-      key: 'a83539db50f54ff7a3a135159241704',
+      key: '9ce6ec46ab0b4d5ea37104238240409',
       q: `${lat},${lng}`,
     };
 
@@ -121,7 +121,7 @@ export class WebService {
   getForecastedWeather(lat: number, lng: number) {
     const urlCurrent = `http://api.weatherapi.com/v1/forecast.json`;
     const params = {
-      key: 'a83539db50f54ff7a3a135159241704',
+      key: '9ce6ec46ab0b4d5ea37104238240409',
       q: `${lat},${lng}`,
       days: 14,
     };
